@@ -1,0 +1,1788 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;\red16\green60\blue192;
+}
+{\*\expandedcolortbl;;\cssrgb\c13333\c13333\c13333;\cssrgb\c100000\c100000\c100000;\cssrgb\c6667\c33333\c80000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs20 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 <!DOCTYPE html>
+\fs24 \
+\
+
+\fs20 <html lang="en">
+\fs24 \
+
+\fs20 <head>
+\fs24 \
+
+\fs20 <meta charset="UTF-8"/>
+\fs24 \
+
+\fs20 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+\fs24 \
+
+\fs20 <title>Business Hustle Portal</title>
+\fs24 \
+
+\fs20 <style>
+\fs24 \
+
+\fs20 *,*::before,*::after\{box-sizing:border-box;margin:0;padding:0\}
+\fs24 \
+
+\fs20 :root\{--accent:#F5C518;--bg:#0a0a0b;--surface:#111114;--text:#e8e8e6;--muted:#7a7a78\}
+\fs24 \
+
+\fs20 html\{scroll-behavior:smooth\}
+\fs24 \
+
+\fs20 body\{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.7;max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column\}
+\fs24 \
+
+\fs20 a\{text-decoration:none\}
+\fs24 \
+
+\fs20 button\{font-family:inherit;cursor:pointer\}
+\fs24 \
+\
+
+\fs20 /* HEADER */
+\fs24 \
+
+\fs20 .header\{position:sticky;top:0;z-index:50;background:rgba(10,10,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid #ffffff0d;padding:10px 16px;display:flex;align-items:center;justify-content:space-between\}
+\fs24 \
+
+\fs20 .logo-wrap\{display:flex;align-items:center;gap:10px\}
+\fs24 \
+
+\fs20 .logo-box\{width:34px;height:34px;background:var(\'96accent);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0\}
+\fs24 \
+
+\fs20 .logo-box svg\{width:26px;height:26px\}
+\fs24 \
+
+\fs20 .logo-name\{font-weight:900;font-size:15px;line-height:1.2\}
+\fs24 \
+
+\fs20 .logo-name span\{color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .logo-sub\{font-size:10px;color:var(\'96muted)\}
+\fs24 \
+
+\fs20 .ai-btn\{background:#111114;border:1px solid #ffffff20;border-radius:10px;padding:7px 12px;color:var(\'96text);font-weight:700;font-size:12px;display:flex;align-items:center;gap:5px;transition:all .2s\}
+\fs24 \
+
+\fs20 .ai-btn.active\{background:var(\'96accent);color:#0a0a0b;border-color:var(\'96accent)\}
+\fs24 \
+\
+
+\fs20 /* PAGES */
+\fs24 \
+
+\fs20 .page\{display:none;flex:1;overflow-y:auto;padding-bottom:80px\}
+\fs24 \
+
+\fs20 .page.active\{display:block\}
+\fs24 \
+\
+
+\fs20 /* BOTTOM NAV */
+\fs24 \
+
+\fs20 .bottom-nav\{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(10,10,11,.96);backdrop-filter:blur(20px);border-top:1px solid #ffffff0d;display:flex;z-index:50\}
+\fs24 \
+
+\fs20 .nav-btn\{flex:1;background:none;border:none;color:var(\'96muted);padding:9px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:600;transition:color .15s\}
+\fs24 \
+
+\fs20 .nav-btn.active\{color:var(\'96accent);font-weight:800\}
+\fs24 \
+
+\fs20 .nav-btn .icon\{font-size:18px\}
+\fs24 \
+
+\fs20 .nav-btn.active .icon\{filter:drop-shadow(0 0 8px #F5C518)\}
+\fs24 \
+\
+
+\fs20 /* HOME */
+\fs24 \
+
+\fs20 .hero\{text-align:center;padding:36px 20px 28px;position:relative\}
+\fs24 \
+
+\fs20 .hero-glow\{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,197,24,.18) 0%,transparent 65%);pointer-events:none\}
+\fs24 \
+
+\fs20 .hero-logo\{width:80px;height:80px;background:var(\'96accent);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 40px rgba(245,197,24,.5)\}
+\fs24 \
+
+\fs20 .hero-logo svg\{width:58px;height:58px\}
+\fs24 \
+
+\fs20 .live-badge\{display:inline-flex;align-items:center;gap:7px;background:rgba(245,197,24,.18);border:1px solid rgba(245,197,24,.4);border-radius:100px;padding:5px 14px;margin-bottom:16px;font-size:11px;color:var(\'96accent);font-weight:700\}
+\fs24 \
+
+\fs20 .live-dot\{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;flex-shrink:0\}
+\fs24 \
+
+\fs20 h1\{font-size:clamp(30px,8vw,48px);font-weight:900;line-height:1.1;letter-spacing:-2px;margin-bottom:10px\}
+\fs24 \
+
+\fs20 h1 span\{color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .tagline\{font-size:clamp(15px,4vw,19px);color:var(\'96muted);min-height:28px;font-weight:600;margin-bottom:24px\}
+\fs24 \
+
+\fs20 .cursor\{color:var(\'96accent);animation:blink .7s infinite\}
+\fs24 \
+
+\fs20 @keyframes blink\{0%,100%\{opacity:1\}50%\{opacity:0\}\}
+\fs24 \
+
+\fs20 .hero-btns\{display:flex;gap:10px;justify-content:center;flex-wrap:wrap\}
+\fs24 \
+
+\fs20 .btn-primary\{background:var(\'96accent);color:#0a0a0b;border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:14px;box-shadow:0 0 24px rgba(245,197,24,.5);transition:opacity .2s,transform .15s\}
+\fs24 \
+
+\fs20 .btn-primary:hover\{opacity:.85;transform:translateY(-1px)\}
+\fs24 \
+
+\fs20 .btn-ghost\{background:transparent;color:var(\'96text);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 20px;font-weight:700;font-size:14px;transition:all .2s\}
+\fs24 \
+
+\fs20 .btn-ghost:hover\{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)\}
+\fs24 \
+\
+
+\fs20 /* STATS */
+\fs24 \
+
+\fs20 .stats\{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 20px\}
+\fs24 \
+
+\fs20 .stat\{background:var(\'96surface);border:1px solid #ffffff0d;border-radius:14px;padding:14px 6px;text-align:center\}
+\fs24 \
+
+\fs20 .stat-num\{font-size:22px;font-weight:900;color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .stat-label\{font-size:10px;color:var(\'96muted);margin-top:2px\}
+\fs24 \
+\
+
+\fs20 /* QUICK ACTIONS */
+\fs24 \
+
+\fs20 .section\{padding:0 16px 20px\}
+\fs24 \
+
+\fs20 .section-header\{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px\}
+\fs24 \
+
+\fs20 .section-title\{font-weight:800;font-size:15px\}
+\fs24 \
+
+\fs20 .see-all\{background:none;border:none;color:var(\'96accent);font-weight:700;font-size:12px\}
+\fs24 \
+
+\fs20 .quick-grid\{display:grid;grid-template-columns:1fr 1fr;gap:10px\}
+\fs24 \
+
+\fs20 .quick-card\{display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:14px;text-decoration:none\}
+\fs24 \
+
+\fs20 .quick-card .q-icon\{font-size:24px\}
+\fs24 \
+
+\fs20 .quick-card .q-title\{font-weight:700;font-size:13px\}
+\fs24 \
+
+\fs20 .quick-card .q-sub\{font-size:11px;color:var(\'96muted)\}
+\fs24 \
+
+\fs20 .qc-green\{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3)\}
+\fs24 \
+
+\fs20 .qc-green .q-title\{color:#25D366\}
+\fs24 \
+
+\fs20 .qc-yellow\{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.3)\}
+\fs24 \
+
+\fs20 .qc-yellow .q-title\{color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .qc-purple\{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3)\}
+\fs24 \
+
+\fs20 .qc-purple .q-title\{color:#a78bfa\}
+\fs24 \
+
+\fs20 .qc-teal\{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3)\}
+\fs24 \
+
+\fs20 .qc-teal .q-title\{color:#34d399\}
+\fs24 \
+\
+
+\fs20 /* SERVICES GRID */
+\fs24 \
+
+\fs20 .services-grid\{display:grid;grid-template-columns:repeat(2,1fr);gap:10px\}
+\fs24 \
+
+\fs20 .svc-card\{background:var(\'96surface);border:1px solid #ffffff0d;border-radius:14px;padding:14px 12px;cursor:pointer;transition:border-color .2s\}
+\fs24 \
+
+\fs20 .svc-icon\{font-size:22px;margin-bottom:8px\}
+\fs24 \
+
+\fs20 .svc-title\{font-weight:700;font-size:13px;color:var(\'96text);margin-bottom:3px\}
+\fs24 \
+
+\fs20 .svc-desc\{font-size:11px;color:var(\'96muted)\}
+\fs24 \
+\
+
+\fs20 /* BANNER */
+\fs24 \
+
+\fs20 .banner\{display:flex;align-items:center;gap:14px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);border-radius:16px;padding:16px 18px;margin:0 16px 20px;text-decoration:none\}
+\fs24 \
+
+\fs20 .banner-icon\{font-size:28px;flex-shrink:0\}
+\fs24 \
+
+\fs20 .banner-title\{font-weight:800;font-size:14px;color:var(\'96text)\}
+\fs24 \
+
+\fs20 .banner-sub\{font-size:12px;color:var(\'96muted);margin-top:2px\}
+\fs24 \
+
+\fs20 .banner-arrow\{color:var(\'96accent);font-size:18px;margin-left:auto;font-weight:900\}
+\fs24 \
+\
+
+\fs20 /* QUOTE */
+\fs24 \
+
+\fs20 .quote\{margin:0 16px;background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2);border-radius:16px;padding:18px\}
+\fs24 \
+
+\fs20 .quote p\{font-style:italic;font-size:14px;color:var(\'96text);line-height:1.6;margin-bottom:8px\}
+\fs24 \
+
+\fs20 .quote cite\{font-size:11px;color:var(\'96muted)\}
+\fs24 \
+\
+
+\fs20 /* SERVICES PAGE */
+\fs24 \
+
+\fs20 .page-header\{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:24px 16px 0\}
+\fs24 \
+
+\fs20 .page-title\{font-size:20px;font-weight:900;margin:0\}
+\fs24 \
+
+\fs20 .page-subtitle\{color:var(\'96muted);font-size:12px;margin:0\}
+\fs24 \
+
+\fs20 .svc-list\{display:flex;flex-direction:column;gap:10px;padding:0 16px\}
+\fs24 \
+
+\fs20 .svc-item\{background:var(\'96surface);border:1px solid #ffffff0d;border-radius:14px;padding:15px 16px;cursor:pointer;transition:border-color .2s\}
+\fs24 \
+
+\fs20 .svc-item-header\{display:flex;align-items:center;gap:12px\}
+\fs24 \
+
+\fs20 .svc-item-icon\{font-size:26px\}
+\fs24 \
+
+\fs20 .svc-item-info\{flex:1\}
+\fs24 \
+
+\fs20 .svc-item-title\{font-weight:800;font-size:14px\}
+\fs24 \
+
+\fs20 .svc-item-desc\{font-size:12px;color:var(\'96muted)\}
+\fs24 \
+
+\fs20 .svc-arrow\{color:var(\'96muted);font-size:18px;transition:transform .2s\}
+\fs24 \
+
+\fs20 .svc-item.open .svc-arrow\{transform:rotate(90deg)\}
+\fs24 \
+
+\fs20 .svc-detail\{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0d\}
+\fs24 \
+
+\fs20 .svc-item.open .svc-detail\{display:block\}
+\fs24 \
+
+\fs20 .svc-detail p\{font-size:13px;color:#9a9a98;line-height:1.65;margin-bottom:12px\}
+\fs24 \
+
+\fs20 .svc-detail a\{display:inline-block;border-radius:10px;padding:8px 16px;font-weight:800;font-size:13px;color:#0a0a0b\}
+\fs24 \
+\
+
+\fs20 /* SHOP PAGE */
+\fs24 \
+
+\fs20 .shop-header\{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:24px 16px 0\}
+\fs24 \
+
+\fs20 .cart-icon\{position:relative;background:var(\'96surface);border:1px solid #ffffff15;border-radius:10px;padding:7px 12px;font-size:18px\}
+\fs24 \
+
+\fs20 .cart-count\{position:absolute;top:-5px;right:-5px;background:#f87171;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800\}
+\fs24 \
+
+\fs20 .shop-list\{display:flex;flex-direction:column;gap:14px;padding:0 16px\}
+\fs24 \
+
+\fs20 .shop-card\{background:var(\'96surface);border-radius:16px;padding:18px;position:relative;overflow:hidden\}
+\fs24 \
+
+\fs20 .shop-tag\{position:absolute;top:0;right:0;font-size:11px;font-weight:800;padding:4px 12px;border-radius:0 16px 0 10px;color:#0a0a0b\}
+\fs24 \
+
+\fs20 .shop-icon\{font-size:28px;margin-bottom:8px\}
+\fs24 \
+
+\fs20 .shop-title\{font-weight:800;font-size:16px;margin-bottom:4px\}
+\fs24 \
+
+\fs20 .shop-desc\{font-size:13px;color:var(\'96muted);margin-bottom:14px\}
+\fs24 \
+
+\fs20 .shop-footer\{display:flex;align-items:center;justify-content:space-between\}
+\fs24 \
+
+\fs20 .shop-price\{font-size:22px;font-weight:900\}
+\fs24 \
+
+\fs20 .add-btn\{border:none;border-radius:10px;padding:9px 16px;font-weight:800;font-size:13px;color:#0a0a0b;transition:opacity .2s\}
+\fs24 \
+
+\fs20 .add-btn:hover\{opacity:.85\}
+\fs24 \
+
+\fs20 .cart-summary\{margin:20px 16px 0;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.3);border-radius:14px;padding:16px\}
+\fs24 \
+
+\fs20 .cart-title\{font-weight:800;margin-bottom:10px\}
+\fs24 \
+
+\fs20 .cart-item\{font-size:13px;color:#9a9a98;margin-bottom:4px\}
+\fs24 \
+
+\fs20 .cart-total\{font-weight:800;font-size:15px;color:var(\'96accent);margin:10px 0 12px\}
+\fs24 \
+
+\fs20 .checkout-btn\{display:block;background:#25D366;color:#fff;text-align:center;text-decoration:none;border-radius:12px;padding:13px;font-weight:800;font-size:14px;width:100%\}
+\fs24 \
+\
+
+\fs20 /* HUSTLE PAGE */
+\fs24 \
+
+\fs20 .hustle-wrap\{padding:24px 16px\}
+\fs24 \
+
+\fs20 .progress-bar\{display:flex;gap:6px;margin-bottom:16px\}
+\fs24 \
+
+\fs20 .prog-seg\{flex:1;height:4px;border-radius:2px;background:#ffffff15;transition:background .3s\}
+\fs24 \
+
+\fs20 .prog-seg.done\{background:var(\'96accent)\}
+\fs24 \
+
+\fs20 .q-num\{font-size:12px;color:var(\'96muted);margin-bottom:10px\}
+\fs24 \
+
+\fs20 .q-text\{font-size:16px;font-weight:700;margin-bottom:18px;line-height:1.5\}
+\fs24 \
+
+\fs20 .q-options\{display:flex;flex-direction:column;gap:10px\}
+\fs24 \
+
+\fs20 .q-opt\{background:#0a0a0b;border:1px solid #ffffff15;border-radius:12px;padding:13px 16px;color:var(\'96text);font-weight:600;font-size:14px;text-align:left;transition:all .15s\}
+\fs24 \
+
+\fs20 .q-opt:hover\{border-color:rgba(245,197,24,.6);color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .result-wrap\{padding:40px 20px;text-align:center\}
+\fs24 \
+
+\fs20 .result-emoji\{font-size:56px;margin-bottom:10px\}
+\fs24 \
+
+\fs20 .result-score\{font-size:30px;font-weight:900;margin-bottom:6px\}
+\fs24 \
+
+\fs20 .result-label\{font-size:20px;font-weight:800;margin-bottom:10px\}
+\fs24 \
+
+\fs20 .result-msg\{color:var(\'96muted);margin-bottom:20px;line-height:1.6;font-size:14px\}
+\fs24 \
+
+\fs20 .result-bar-wrap\{background:var(\'96surface);border-radius:100px;height:12px;margin:0 0 24px;overflow:hidden\}
+\fs24 \
+
+\fs20 .result-bar\{height:100%;border-radius:100px;background:linear-gradient(90deg,#34d399,var(\'96accent))\}
+\fs24 \
+
+\fs20 .result-btns\{display:flex;flex-direction:column;gap:10px\}
+\fs24 \
+
+\fs20 .result-btn-primary\{display:block;background:var(\'96accent);color:#0a0a0b;text-decoration:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px\}
+\fs24 \
+
+\fs20 .result-btn-wa\{display:block;background:#25D366;color:#fff;text-decoration:none;border-radius:12px;padding:13px;font-weight:800;font-size:14px\}
+\fs24 \
+
+\fs20 .result-btn-ghost\{background:var(\'96surface);border:1px solid #ffffff15;color:var(\'96text);border-radius:12px;padding:12px;font-weight:700;font-size:14px;width:100%\}
+\fs24 \
+\
+
+\fs20 /* CONTACT PAGE */
+\fs24 \
+
+\fs20 .contact-wrap\{padding:24px 16px\}
+\fs24 \
+
+\fs20 .contact-link\{display:flex;align-items:center;gap:14px;border-radius:16px;padding:16px 18px;text-decoration:none;margin-bottom:10px\}
+\fs24 \
+
+\fs20 .cl-green\{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3)\}
+\fs24 \
+
+\fs20 .cl-yellow\{background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25)\}
+\fs24 \
+
+\fs20 .cl-teal\{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25)\}
+\fs24 \
+
+\fs20 .contact-link-title\{font-weight:800;font-size:14px\}
+\fs24 \
+
+\fs20 .contact-link-sub\{font-size:12px;color:var(\'96muted)\}
+\fs24 \
+
+\fs20 .cl-green .contact-link-title\{color:#25D366\}
+\fs24 \
+
+\fs20 .cl-yellow .contact-link-title\{color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .cl-teal .contact-link-title\{color:#34d399\}
+\fs24 \
+
+\fs20 .cl-arrow\{margin-left:auto;font-size:18px\}
+\fs24 \
+
+\fs20 .cl-green .cl-arrow\{color:#25D366\}
+\fs24 \
+
+\fs20 .cl-yellow .cl-arrow\{color:var(\'96accent)\}
+\fs24 \
+
+\fs20 .cl-teal .cl-arrow\{color:#34d399\}
+\fs24 \
+
+\fs20 .form-box\{background:var(\'96surface);border:1px solid #ffffff0d;border-radius:16px;padding:18px;margin-top:6px\}
+\fs24 \
+
+\fs20 .form-title\{font-weight:700;font-size:14px;margin-bottom:14px\}
+\fs24 \
+
+\fs20 .form-input\{display:block;width:100%;background:#0a0a0b;border:1px solid #ffffff15;border-radius:10px;padding:11px 14px;color:var(\'96text);font-size:13px;margin-bottom:10px;outline:none;font-family:inherit;transition:border-color .2s\}
+\fs24 \
+
+\fs20 .form-input:focus\{border-color:var(\'96accent)\}
+\fs24 \
+
+\fs20 textarea.form-input\{resize:none;margin-bottom:14px\}
+\fs24 \
+
+\fs20 .form-submit\{width:100%;background:var(\'96accent);color:#0a0a0b;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;transition:opacity .2s\}
+\fs24 \
+
+\fs20 .form-submit:hover\{opacity:.85\}
+\fs24 \
+
+\fs20 .success-wrap\{padding:60px 20px;text-align:center\}
+\fs24 \
+
+\fs20 .success-emoji\{font-size:48px;margin-bottom:16px\}
+\fs24 \
+
+\fs20 .success-title\{font-size:22px;font-weight:900;margin-bottom:10px\}
+\fs24 \
+
+\fs20 .success-msg\{color:var(\'96muted);margin-bottom:24px;font-size:14px\}
+\fs24 \
+\
+
+\fs20 /* INFO GRID */
+\fs24 \
+
+\fs20 .info-grid\{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px\}
+\fs24 \
+
+\fs20 .info-card\{background:var(\'96surface);border:1px solid #ffffff0d;border-radius:12px;padding:12px 14px\}
+\fs24 \
+
+\fs20 .info-icon\{font-size:18px;margin-bottom:4px\}
+\fs24 \
+
+\fs20 .info-label\{font-size:11px;color:var(\'96muted)\}
+\fs24 \
+
+\fs20 .info-val\{font-size:12px;font-weight:700;color:var(\'96text);margin-top:2px\}
+\fs24 \
+\
+
+\fs20 /* AI CHAT */
+\fs24 \
+
+\fs20 .chat-wrap\{position:fixed;bottom:80px;left:10px;right:10px;max-width:400px;margin:0 auto;background:#111114;border:1px solid rgba(245,197,24,.4);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.8);z-index:999;display:flex;flex-direction:column;overflow:hidden\}
+\fs24 \
+
+\fs20 .chat-header\{background:var(\'96accent);padding:12px 16px;display:flex;align-items:center;justify-content:space-between\}
+\fs24 \
+
+\fs20 .chat-header-left\{display:flex;align-items:center;gap:10px\}
+\fs24 \
+
+\fs20 .chat-header-name\{font-weight:800;color:#0a0a0b;font-size:14px\}
+\fs24 \
+
+\fs20 .chat-header-sub\{font-size:11px;color:rgba(10,10,11,.6)\}
+\fs24 \
+
+\fs20 .chat-close\{background:none;border:none;font-size:18px;color:rgba(10,10,11,.6);cursor:pointer\}
+\fs24 \
+
+\fs20 .chat-messages\{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:260px\}
+\fs24 \
+
+\fs20 .msg\{display:flex\}
+\fs24 \
+
+\fs20 .msg.user\{justify-content:flex-end\}
+\fs24 \
+
+\fs20 .msg-bubble\{padding:10px 14px;max-width:82%;font-size:13px;line-height:1.55\}
+\fs24 \
+
+\fs20 .msg.user .msg-bubble\{background:var(\'96accent);color:#0a0a0b;border-radius:16px 16px 4px 16px\}
+\fs24 \
+
+\fs20 .msg.bot .msg-bubble\{background:#1e1e22;color:var(\'96text);border-radius:16px 16px 16px 4px\}
+\fs24 \
+
+\fs20 .typing\{display:flex;gap:5px;padding:10px 14px;background:#1e1e22;border-radius:16px 16px 16px 4px;width:fit-content\}
+\fs24 \
+
+\fs20 .typing span\{width:7px;height:7px;border-radius:50%;background:var(\'96accent);animation:bounce 1s infinite\}
+\fs24 \
+
+\fs20 .typing span:nth-child(2)\{animation-delay:.2s\}
+\fs24 \
+
+\fs20 .typing span:nth-child(3)\{animation-delay:.4s\}
+\fs24 \
+
+\fs20 @keyframes bounce\{0%,100%\{transform:translateY(0)\}50%\{transform:translateY(-5px)\}\}
+\fs24 \
+
+\fs20 .chat-input-row\{padding:10px 12px;border-top:1px solid #ffffff10;display:flex;gap:8px\}
+\fs24 \
+
+\fs20 .chat-input\{flex:1;background:#0a0a0b;border:1px solid #ffffff15;border-radius:10px;padding:9px 12px;color:var(\'96text);font-size:13px;outline:none;font-family:inherit\}
+\fs24 \
+
+\fs20 .chat-send\{background:var(\'96accent);border:none;border-radius:10px;width:38px;font-size:16px;font-weight:800;color:#0a0a0b\}
+\fs24 \
+\
+
+\fs20 /* TOAST */
+\fs24 \
+
+\fs20 .toast\{position:fixed;top:68px;left:50%;transform:translateX(-50%);background:#34d399;color:#0a0a0b;padding:10px 20px;border-radius:100px;font-weight:700;font-size:13px;z-index:999;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none\}
+\fs24 \
+
+\fs20 .toast.show\{opacity:1\}
+\fs24 \
+
+\fs20 </style>
+\fs24 \
+\
+
+\fs20 </head>
+\fs24 \
+
+\fs20 <body>
+\fs24 \
+\
+
+\fs20 <!-- HEADER -->
+\fs24 \
+\
+
+\fs20 <div class="header">
+\fs24 \
+
+\fs20 <div class="logo-wrap">
+\fs24 \
+
+\fs20 <div class="logo-box">
+\fs24 \
+
+\fs20 <svg viewBox="0 0 52 52" fill="none" xmlns="{\field{\*\fldinst{HYPERLINK "http://www.w3.org/2000/svg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://www.w3.org/2000/svg}}">
+\fs24 \
+
+\fs20 <text x="1" y="36" font-family="Georgia,'Times New Roman',serif" font-size="40" fill="#0a0a0b">B</text>
+\fs24 \
+
+\fs20 <text x="20" y="50" font-family="Georgia,'Times New Roman',serif" font-size="24" fill="#0a0a0b">H</text>
+\fs24 \
+
+\fs20 </svg>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div>
+\fs24 \
+
+\fs20 <div class="logo-name">Business <span>Hustle</span> \'a9</div>
+\fs24 \
+
+\fs20 <div class="logo-sub">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za}}</div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <button class="ai-btn" id="aiBtn" onclick="toggleChat()">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0AI Advisor</button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- PAGES -->
+\fs24 \
+\
+
+\fs20 <!-- HOME -->
+\fs24 \
+\
+
+\fs20 <div class="page active" id="page-home">
+\fs24 \
+
+\fs20 <div class="hero">
+\fs24 \
+
+\fs20 <div class="hero-glow"></div>
+\fs24 \
+
+\fs20 <div class="hero-logo">
+\fs24 \
+
+\fs20 <svg viewBox="0 0 52 52" fill="none">
+\fs24 \
+
+\fs20 <text x="1" y="36" font-family="Georgia,'Times New Roman',serif" font-size="40" fill="#0a0a0b">B</text>
+\fs24 \
+
+\fs20 <text x="20" y="50" font-family="Georgia,'Times New Roman',serif" font-size="24" fill="#0a0a0b">H</text>
+\fs24 \
+
+\fs20 </svg>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="live-badge"><span class="live-dot"></span>\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0South Africa's Digital Growth Partner</div>
+\fs24 \
+
+\fs20 <h1>Business <span>Hustle</span> \'a9</h1>
+\fs24 \
+
+\fs20 <div class="tagline" id="tagline">Explore. Adapt. Evolve.<span class="cursor">|</span></div>
+\fs24 \
+
+\fs20 <div class="hero-btns">
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="btn-primary">Get Started \uc0\u8594 </a>
+\fs24 \
+
+\fs20 <button class="btn-ghost" onclick="showPage('hustle')">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0Hustle Score</button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="banner">
+\fs24 \
+
+\fs20 <span class="banner-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>
+\fs24 \
+
+\fs20 <div>
+\fs24 \
+
+\fs20 <div class="banner-title">Ready to grow your business?</div>
+\fs24 \
+
+\fs20 <div class="banner-sub">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za/get-started}}</div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <span class="banner-arrow">\uc0\u8594 </span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+\
+
+\fs20 <div class="stats">
+\fs24 \
+
+\fs20 <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Founders</div></div>
+\fs24 \
+
+\fs20 <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Services</div></div>
+\fs24 \
+
+\fs20 <div class="stat"><div class="stat-num">4.9\uc0\u9733 </div><div class="stat-label">Rating</div></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <div class="section">
+\fs24 \
+
+\fs20 <div class="section-header"><div class="section-title">Quick Actions</div></div>
+\fs24 \
+
+\fs20 <div class="quick-grid">
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://wa.me/27744815163"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://wa.me/27744815163}}" target="_blank" class="quick-card qc-green">
+\fs24 \
+
+\fs20 <span class="q-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span><span class="q-title">WhatsApp Us</span><span class="q-sub">+27 74 481 5163</span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za}}" target="_blank" class="quick-card qc-yellow">
+\fs24 \
+
+\fs20 <span class="q-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span><span class="q-title">Visit Website</span><span class="q-sub">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za}}</span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <a href="#" onclick="showPage('shop');return false" class="quick-card qc-purple">
+\fs24 \
+
+\fs20 <span class="q-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span><span class="q-title">View Shop</span><span class="q-sub">Starter packages</span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="quick-card qc-teal">
+\fs24 \
+
+\fs20 <span class="q-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span><span class="q-title">Resources</span><span class="q-sub">Get Started guide</span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <div class="section">
+\fs24 \
+
+\fs20 <div class="section-header">
+\fs24 \
+
+\fs20 <div class="section-title">Our Services</div>
+\fs24 \
+
+\fs20 <button class="see-all" onclick="showPage('services')">See all \uc0\u8594 </button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="services-grid">
+\fs24 \
+
+\fs20 <div class="svc-card" style="border-color:rgba(245,197,24,.15)"><div class="svc-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="svc-title">Brand Strategy</div><div class="svc-desc">Position yourself to win</div></div>
+\fs24 \
+
+\fs20 <div class="svc-card" style="border-color:rgba(167,139,250,.15)"><div class="svc-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="svc-title">Web Development</div><div class="svc-desc">Sites that convert</div></div>
+\fs24 \
+
+\fs20 <div class="svc-card" style="border-color:rgba(52,211,153,.15)"><div class="svc-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="svc-title">Digital Marketing</div><div class="svc-desc">Grow fast, grow smart</div></div>
+\fs24 \
+
+\fs20 <div class="svc-card" style="border-color:rgba(248,113,113,.15)"><div class="svc-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="svc-title">Content Creation</div><div class="svc-desc">Stories that stick</div></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <div class="quote">
+\fs24 \
+
+\fs20 <p>"Think of technology as a verb, not a noun. It provides the tools \'97 creative people provide the imagination."</p>
+\fs24 \
+
+\fs20 <cite>\'97 Red Burns</cite>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- SERVICES -->
+\fs24 \
+\
+
+\fs20 <div class="page" id="page-services">
+\fs24 \
+
+\fs20 <div class="page-header">
+\fs24 \
+
+\fs20 <div class="logo-box" style="width:36px;height:36px">
+\fs24 \
+
+\fs20 <svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div><p class="page-title">All Services</p><p class="page-subtitle">Tap a service to learn more</p></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="svc-list" id="svcList"></div>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="banner" style="margin-top:20px">
+\fs24 \
+
+\fs20 <span class="banner-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>
+\fs24 \
+
+\fs20 <div><div class="banner-title">Resource Centre</div><div class="banner-sub">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za/get-started}}</div></div>
+\fs24 \
+
+\fs20 <span class="banner-arrow">\uc0\u8594 </span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- SHOP -->
+\fs24 \
+\
+
+\fs20 <div class="page" id="page-shop">
+\fs24 \
+
+\fs20 <div class="shop-header">
+\fs24 \
+
+\fs20 <div style="display:flex;align-items:center;gap:10px">
+\fs24 \
+
+\fs20 <div class="logo-box" style="width:34px;height:34px"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
+\fs24 \
+
+\fs20 <div><p class="page-title" style="margin:0;font-size:19px">Shop</p><p class="page-subtitle" style="margin:0">Ready-made packages</p></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="cart-icon" id="cartIcon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 <span class="cart-count" id="cartCount" style="display:none">0</span></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="shop-list" id="shopList"></div>
+\fs24 \
+
+\fs20 <div id="cartSummary" style="display:none" class="cart-summary">
+\fs24 \
+
+\fs20 <div class="cart-title">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0Cart (<span id="cartNum">0</span> items)</div>
+\fs24 \
+
+\fs20 <div id="cartItems"></div>
+\fs24 \
+
+\fs20 <div class="cart-total">Total: R<span id="cartTotal">0</span></div>
+\fs24 \
+
+\fs20 <a id="checkoutBtn" href="#" target="_blank" class="checkout-btn">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0Checkout via WhatsApp \uc0\u8594 </a>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- HUSTLE -->
+\fs24 \
+\
+
+\fs20 <div class="page" id="page-hustle">
+\fs24 \
+
+\fs20 <div id="hustleQuiz" class="hustle-wrap"></div>
+\fs24 \
+
+\fs20 <div id="hustleResult" class="result-wrap" style="display:none"></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- CONTACT -->
+\fs24 \
+\
+
+\fs20 <div class="page" id="page-contact">
+\fs24 \
+
+\fs20 <div id="contactMain" class="contact-wrap">
+\fs24 \
+
+\fs20 <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+\fs24 \
+
+\fs20 <div class="logo-box" style="width:36px;height:36px"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
+\fs24 \
+
+\fs20 <div><p class="page-title" style="margin:0;font-size:19px">Get in Touch</p><p class="page-subtitle" style="margin:0">We reply within 2 hours</p></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://wa.me/27744815163"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://wa.me/27744815163}}" target="_blank" class="contact-link cl-green">
+\fs24 \
+
+\fs20 <span style="font-size:28px">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>
+\fs24 \
+
+\fs20 <div><div class="contact-link-title">WhatsApp (Fastest)</div><div class="contact-link-sub">+27 74 481 5163</div></div>
+\fs24 \
+
+\fs20 <span class="cl-arrow">\uc0\u8594 </span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za}}" target="_blank" class="contact-link cl-yellow">
+\fs24 \
+
+\fs20 <span style="font-size:28px">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>
+\fs24 \
+
+\fs20 <div><div class="contact-link-title">Visit Our Website</div><div class="contact-link-sub">{\field{\*\fldinst{HYPERLINK "http://www.businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 www.businesshustle.co.za}}</div></div>
+\fs24 \
+
+\fs20 <span class="cl-arrow">\uc0\u8594 </span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="contact-link cl-teal">
+\fs24 \
+
+\fs20 <span style="font-size:28px">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>
+\fs24 \
+
+\fs20 <div><div class="contact-link-title">Resource Page</div><div class="contact-link-sub">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za/get-started}}</div></div>
+\fs24 \
+
+\fs20 <span class="cl-arrow">\uc0\u8594 </span>
+\fs24 \
+
+\fs20 </a>
+\fs24 \
+
+\fs20 <div class="form-box">
+\fs24 \
+
+\fs20 <div class="form-title">Send a message</div>
+\fs24 \
+
+\fs20 <input class="form-input" id="fname" placeholder="Your name" type="text"/>
+\fs24 \
+
+\fs20 <input class="form-input" id="femail" placeholder="Email address" type="email"/>
+\fs24 \
+
+\fs20 <textarea class="form-input" id="fmsg" placeholder="Tell us about your project\'85" rows="3"></textarea>
+\fs24 \
+
+\fs20 <button class="form-submit" onclick="submitForm()">Send Message \uc0\u8594 </button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="info-grid">
+\fs24 \
+
+\fs20 <div class="info-card"><div class="info-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="info-label">Website</div><div class="info-val">{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za}}</div></div>
+\fs24 \
+
+\fs20 <div class="info-card"><div class="info-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="info-label">WhatsApp</div><div class="info-val">+27 74 481 5163</div></div>
+\fs24 \
+
+\fs20 <div class="info-card"><div class="info-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="info-label">Resources</div><div class="info-val">Get Started page</div></div>
+\fs24 \
+
+\fs20 <div class="info-card"><div class="info-icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div><div class="info-label">Location</div><div class="info-val">South Africa\'a0\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div id="contactSuccess" class="success-wrap" style="display:none">
+\fs24 \
+
+\fs20 <div class="success-emoji">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </div>
+\fs24 \
+
+\fs20 <div class="success-title">Message sent!</div>
+\fs24 \
+
+\fs20 <div class="success-msg">We'll hit you back within 2 hours. The hustle never sleeps.</div>
+\fs24 \
+
+\fs20 <button class="btn-primary" onclick="document.getElementById('contactSuccess').style.display='none';document.getElementById('contactMain').style.display='block'">Send another \uc0\u8594 </button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <!-- BOTTOM NAV -->
+\fs24 \
+\
+
+\fs20 <nav class="bottom-nav">
+\fs24 \
+
+\fs20 <button class="nav-btn active" onclick="showPage('home')" id="nav-home"><span class="icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>Home</button>
+\fs24 \
+
+\fs20 <button class="nav-btn" onclick="showPage('services')" id="nav-services"><span class="icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>Services</button>
+\fs24 \
+
+\fs20 <button class="nav-btn" onclick="showPage('shop')" id="nav-shop"><span class="icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>Shop</button>
+\fs24 \
+
+\fs20 <button class="nav-btn" onclick="showPage('hustle')" id="nav-hustle"><span class="icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>Hustle</button>
+\fs24 \
+
+\fs20 <button class="nav-btn" onclick="showPage('contact')" id="nav-contact"><span class="icon">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 </span>Contact</button>
+\fs24 \
+
+\fs20 </nav>
+\fs24 \
+\
+
+\fs20 <!-- TOAST -->
+\fs24 \
+\
+
+\fs20 <div class="toast" id="toast"></div>
+\fs24 \
+\
+
+\fs20 <!-- AI CHAT -->
+\fs24 \
+\
+
+\fs20 <div class="chat-wrap" id="chatWrap" style="display:none">
+\fs24 \
+
+\fs20 <div class="chat-header">
+\fs24 \
+
+\fs20 <div class="chat-header-left">
+\fs24 \
+
+\fs20 <div class="logo-box" style="width:32px;height:32px"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
+\fs24 \
+
+\fs20 <div><div class="chat-header-name">BH AI Advisor</div><div class="chat-header-sub">Powered by Claude \'b7\'a0{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za}}</div></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <button class="chat-close" onclick="toggleChat()">\uc0\u10005 </button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="chat-messages" id="chatMessages">
+\fs24 \
+
+\fs20 <div class="msg bot"><div class="msg-bubble">Hey!\'a0\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0I'm your Business Hustle AI advisor. Ask me anything about growing your business, pricing, or strategy!</div></div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 <div class="chat-input-row">
+\fs24 \
+
+\fs20 <input class="chat-input" id="chatInput" placeholder="Ask anything\'85" onkeydown="if(event.key==='Enter')sendChat()"/>
+\fs24 \
+
+\fs20 <button class="chat-send" onclick="sendChat()">\uc0\u8594 </button>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+
+\fs20 </div>
+\fs24 \
+\
+
+\fs20 <script>
+\fs24 \
+
+\fs20 // \uc0\u9472 \u9472  NAVIGATION \u9472 \u9472 
+\fs24 \
+
+\fs20 function showPage(id) \{
+\fs24 \
+
+\fs20 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+\fs24 \
+
+\fs20 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+\fs24 \
+
+\fs20 document.getElementById('page-' + id).classList.add('active');
+\fs24 \
+
+\fs20 document.getElementById('nav-' + id).classList.add('active');
+\fs24 \
+
+\fs20 window.scrollTo(0, 0);
+\fs24 \
+
+\fs20 \}
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  TYPEWRITER \u9472 \u9472 
+\fs24 \
+
+\fs20 const taglines = ['Explore. Adapt. Evolve.', 'Build. Launch. Scale.', 'Less friction. More revenue.'];
+\fs24 \
+
+\fs20 let tIdx = 0, cIdx = 0, typing = true;
+\fs24 \
+
+\fs20 const tagEl = document.getElementById('tagline');
+\fs24 \
+
+\fs20 function typeStep() \{
+\fs24 \
+
+\fs20 const cur = taglines[tIdx];
+\fs24 \
+
+\fs20 if (typing) \{
+\fs24 \
+
+\fs20 cIdx++;
+\fs24 \
+
+\fs20 tagEl.innerHTML = cur.slice(0, cIdx) + '<span class="cursor">|</span>';
+\fs24 \
+
+\fs20 if (cIdx >= cur.length) \{ typing = false; setTimeout(typeStep, 1800); return; \}
+\fs24 \
+
+\fs20 \} else \{
+\fs24 \
+
+\fs20 typing = true; cIdx = 0; tIdx = (tIdx + 1) % taglines.length;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 setTimeout(typeStep, typing ? 45 : 0);
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 typeStep();
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  SERVICES \u9472 \u9472 
+\fs24 \
+
+\fs20 const SERVICES = [
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Brand Strategy', desc:'Position yourself to win', color:'#F5C518', detail:'We craft positioning strategies that make your brand unforgettable \'97 from logo to market narrative.' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Web Development', desc:'Sites that convert', color:'#a78bfa', detail:'Custom websites, landing pages and e-commerce stores built for speed, SEO, and conversions.' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Digital Marketing', desc:'Grow fast, grow smart', color:'#34d399', detail:'Google Ads, Meta campaigns, SEO and social media management \'97 all data-driven.' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Content Creation', desc:'Stories that stick', color:'#f87171', detail:'Photo, video, copywriting and social content that captures your brand voice.' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Expert Network', desc:'Connect with pros', color:'#60a5fa', detail:'Tap into our vetted network of designers, developers and marketers on demand.' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Business Coaching', desc:'Level up your mindset', color:'#fb923c', detail:'1-on-1 sessions and group programmes to sharpen your strategy and execution.' \},
+\fs24 \
+
+\fs20 ];
+\fs24 \
+
+\fs20 const svcList = document.getElementById('svcList');
+\fs24 \
+
+\fs20 SERVICES.forEach(s => \{
+\fs24 \
+
+\fs20 const el = document.createElement('div');
+\fs24 \
+
+\fs20 el.className = 'svc-item';
+\fs24 \
+
+\fs20 el.innerHTML = `<div class="svc-item-header"><span class="svc-item-icon">$\{s.icon\}</span><div class="svc-item-info"><div class="svc-item-title">$\{s.title\}</div><div class="svc-item-desc">$\{s.desc\}</div></div><span class="svc-arrow">\'9b</span></div><div class="svc-detail"><p>$\{s.detail\}</p><a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" style="background:$\{s.color\}">Get Started \uc0\u8594 </a></div>`;
+\fs24 \
+
+\fs20 el.style.borderColor = s.color + '25';
+\fs24 \
+
+\fs20 el.querySelector('.svc-item-header').onclick = () => \{
+\fs24 \
+
+\fs20 el.classList.toggle('open');
+\fs24 \
+
+\fs20 el.style.borderColor = el.classList.contains('open') ? s.color + '60' : s.color + '25';
+\fs24 \
+
+\fs20 \};
+\fs24 \
+
+\fs20 svcList.appendChild(el);
+\fs24 \
+
+\fs20 \});
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  SHOP \u9472 \u9472 
+\fs24 \
+
+\fs20 const SHOP = [
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Starter Pack', price:499, tag:'Popular', desc:'Logo, business card & 1-page site', color:'#F5C518' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Growth Bundle', price:1999, tag:'Best Value', desc:'Full brand kit + social templates + ads setup', color:'#34d399' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Scale Suite', price:4999, tag:'Premium', desc:'Everything + dedicated expert + 3-month support', color:'#a78bfa' \},
+\fs24 \
+
+\fs20 \{ icon:'\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ', title:'Social Media Kit', price:799, tag:'New', desc:'30 custom posts + captions + scheduling', color:'#f87171' \},
+\fs24 \
+
+\fs20 ];
+\fs24 \
+
+\fs20 let cart = [];
+\fs24 \
+
+\fs20 const shopList = document.getElementById('shopList');
+\fs24 \
+
+\fs20 SHOP.forEach(item => \{
+\fs24 \
+
+\fs20 const el = document.createElement('div');
+\fs24 \
+
+\fs20 el.className = 'shop-card';
+\fs24 \
+
+\fs20 el.style.border = `1px solid $\{item.color\}30`;
+\fs24 \
+
+\fs20 el.innerHTML = `<div class="shop-tag" style="background:$\{item.color\}">$\{item.tag\}</div><div class="shop-icon">$\{item.icon\}</div><div class="shop-title">$\{item.title\}</div><div class="shop-desc">$\{item.desc\}</div><div class="shop-footer"><div class="shop-price" style="color:$\{item.color\}">R$\{item.price.toLocaleString()\}</div><button class="add-btn" style="background:$\{item.color\}" onclick="addToCart('$\{item.title\}',$\{item.price\},'$\{item.icon\}')">Add to Cart</button></div>`;
+\fs24 \
+
+\fs20 shopList.appendChild(el);
+\fs24 \
+
+\fs20 \});
+\fs24 \
+
+\fs20 function addToCart(title, price, icon) \{
+\fs24 \
+
+\fs20 cart.push(\{ title, price, icon \});
+\fs24 \
+
+\fs20 updateCart();
+\fs24 \
+
+\fs20 showToast(`$\{icon\} $\{title\} added!`);
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function updateCart() \{
+\fs24 \
+
+\fs20 const total = cart.reduce((a, c) => a + c.price, 0);
+\fs24 \
+
+\fs20 const count = cart.length;
+\fs24 \
+
+\fs20 document.getElementById('cartCount').textContent = count;
+\fs24 \
+
+\fs20 document.getElementById('cartCount').style.display = count ? 'flex' : 'none';
+\fs24 \
+
+\fs20 document.getElementById('cartNum').textContent = count;
+\fs24 \
+
+\fs20 document.getElementById('cartTotal').textContent = total.toLocaleString();
+\fs24 \
+
+\fs20 document.getElementById('cartItems').innerHTML = cart.map(c => `<div class="cart-item">$\{c.icon\} $\{c.title\} \'97 R$\{c.price.toLocaleString()\}</div>`).join('');
+\fs24 \
+
+\fs20 document.getElementById('cartSummary').style.display = count ? 'block' : 'none';
+\fs24 \
+
+\fs20 document.getElementById('checkoutBtn').href = `{\field{\*\fldinst{HYPERLINK "https://wa.me/27744815163?text=Hi"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://wa.me/27744815163?text=Hi}}! I'd like to order: $\{cart.map(c=>c.title).join(', ')\} \'97 Total: R$\{total.toLocaleString()\}`;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  HUSTLE QUIZ \u9472 \u9472 
+\fs24 \
+
+\fs20 const QUESTIONS = [
+\fs24 \
+
+\fs20 \{ q:'How many hours do you work on your business per week?', opts:['0\'965 hrs','6\'9615 hrs','16\'9630 hrs','30+ hrs'], scores:[5,15,25,40] \},
+\fs24 \
+
+\fs20 \{ q:'Do you have a website or online presence?', opts:['Not yet','Social only','Website (basic)','Full digital presence'], scores:[0,10,20,30] \},
+\fs24 \
+
+\fs20 \{ q:'How do you find new customers?', opts:['Word of mouth only','Some social posting','Consistent marketing','Paid + organic strategy'], scores:[5,10,20,30] \},
+\fs24 \
+
+\fs20 ];
+\fs24 \
+
+\fs20 let qStep = 0, qAnswers = [];
+\fs24 \
+
+\fs20 function renderQuiz() \{
+\fs24 \
+
+\fs20 const wrap = document.getElementById('hustleQuiz');
+\fs24 \
+
+\fs20 const q = QUESTIONS[qStep];
+\fs24 \
+
+\fs20 wrap.innerHTML = `<div class="progress-bar">$\{QUESTIONS.map((_,i)=>`<div class="prog-seg $\{i<=qStep?'done':''\}"></div>`).join('')\}</div><div class="q-num">Question $\{qStep+1\} of $\{QUESTIONS.length\}</div><div class="q-text">$\{q.q\}</div><div class="q-options">$\{q.opts.map((o,i)=>`<button class="q-opt" onclick="pickAnswer($\{q.scores[i]\})">$\{o\}</button>`).join('')\}</div>`;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function pickAnswer(score) \{
+\fs24 \
+
+\fs20 qAnswers.push(score);
+\fs24 \
+
+\fs20 if (qStep < QUESTIONS.length - 1) \{ qStep++; renderQuiz(); \}
+\fs24 \
+
+\fs20 else \{ showResult(); \}
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function showResult() \{
+\fs24 \
+
+\fs20 const total = qAnswers.reduce((a,b)=>a+b,0);
+\fs24 \
+
+\fs20 const max = QUESTIONS.reduce((a,q)=>a+Math.max(...q.scores),0);
+\fs24 \
+
+\fs20 const pct = Math.round((total/max)*100);
+\fs24 \
+
+\fs20 const [emoji,label,msg,color] = pct<30?['\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ','Seedling','You\\'re just getting started \'97 let\\'s plant the right seeds.','#34d399']:pct<60?['\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ','Side Hustler','You\\'ve got momentum. Time to turn up the heat!','#fb923c']:pct<85?['\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ','Grind Mode','You\\'re serious. Let\\'s take you to the next level!','#F5C518']:['\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ','Full Hustle','You\\'re an absolute machine. Let\\'s scale this empire.','#a78bfa'];
+\fs24 \
+
+\fs20 document.getElementById('hustleQuiz').style.display='none';
+\fs24 \
+
+\fs20 const res = document.getElementById('hustleResult');
+\fs24 \
+
+\fs20 res.style.display='block';
+\fs24 \
+
+\fs20 res.innerHTML=`<div class="result-emoji">$\{emoji\}</div><div class="result-score" style="color:$\{color\}">$\{pct\}% Hustle</div><div class="result-label">$\{label\}</div><div class="result-msg">$\{msg\}</div><div class="result-bar-wrap"><div class="result-bar" style="width:$\{pct\}%;background:linear-gradient(90deg,$\{color\},#F5C518)"></div></div><div class="result-btns"><a href="{\field{\*\fldinst{HYPERLINK "https://www.businesshustle.co.za/get-started"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://www.businesshustle.co.za/get-started}}" target="_blank" class="result-btn-primary">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0Get the full playbook \uc0\u8594 </a><a href="{\field{\*\fldinst{HYPERLINK "https://wa.me/27744815163?text=Hi"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://wa.me/27744815163?text=Hi}}! I got a Hustle Score of $\{pct\}% and want to grow my business!" target="_blank" class="result-btn-wa">\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 \'a0Talk to an Expert</a><button class="result-btn-ghost" onclick="resetQuiz()">Retake Quiz</button></div>`;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function resetQuiz() \{
+\fs24 \
+
+\fs20 qStep=0;qAnswers=[];
+\fs24 \
+
+\fs20 document.getElementById('hustleResult').style.display='none';
+\fs24 \
+
+\fs20 document.getElementById('hustleQuiz').style.display='block';
+\fs24 \
+
+\fs20 renderQuiz();
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 renderQuiz();
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  CONTACT \u9472 \u9472 
+\fs24 \
+
+\fs20 function submitForm() \{
+\fs24 \
+
+\fs20 const n=document.getElementById('fname').value;
+\fs24 \
+
+\fs20 const e=document.getElementById('femail').value;
+\fs24 \
+
+\fs20 const m=document.getElementById('fmsg').value;
+\fs24 \
+
+\fs20 if(!n||!e||!m)\{showToast('Please fill in all fields');return;\}
+\fs24 \
+
+\fs20 document.getElementById('contactMain').style.display='none';
+\fs24 \
+
+\fs20 document.getElementById('contactSuccess').style.display='block';
+\fs24 \
+
+\fs20 \}
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  TOAST \u9472 \u9472 
+\fs24 \
+
+\fs20 function showToast(msg) \{
+\fs24 \
+
+\fs20 const t=document.getElementById('toast');
+\fs24 \
+
+\fs20 t.textContent='\uc0\u10003  '+msg;t.classList.add('show');
+\fs24 \
+
+\fs20 setTimeout(()=>t.classList.remove('show'),2200);
+\fs24 \
+
+\fs20 \}
+\fs24 \
+\
+
+\fs20 // \uc0\u9472 \u9472  AI CHAT \u9472 \u9472 
+\fs24 \
+
+\fs20 let chatOpen=false;
+\fs24 \
+
+\fs20 const chatMsgs=[];
+\fs24 \
+
+\fs20 function toggleChat()\{
+\fs24 \
+
+\fs20 chatOpen=!chatOpen;
+\fs24 \
+
+\fs20 document.getElementById('chatWrap').style.display=chatOpen?'flex':'none';
+\fs24 \
+
+\fs20 document.getElementById('aiBtn').classList.toggle('active',chatOpen);
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 async function sendChat()\{
+\fs24 \
+
+\fs20 const inp=document.getElementById('chatInput');
+\fs24 \
+
+\fs20 const text=inp.value.trim();if(!text)return;
+\fs24 \
+
+\fs20 inp.value='';
+\fs24 \
+
+\fs20 addMsg('user',text);
+\fs24 \
+
+\fs20 chatMsgs.push(\{role:'user',content:text\});
+\fs24 \
+
+\fs20 const typing=addTyping();
+\fs24 \
+
+\fs20 try\{
+\fs24 \
+
+\fs20 const r=await fetch('{\field{\*\fldinst{HYPERLINK "https://api.anthropic.com/v1/messages"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://api.anthropic.com/v1/messages}}',\{method:'POST',headers:\{'Content-Type':'application/json'\},body:JSON.stringify(\{model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are an energetic, friendly business advisor for Business Hustle \'97 a South African digital startup agency at\'a0{\field{\*\fldinst{HYPERLINK "http://businesshustle.co.za/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 businesshustle.co.za}}. Keep responses punchy and practical. Max 3 sentences. Use emojis occasionally.',messages:chatMsgs\})\});
+\fs24 \
+
+\fs20 const d=await r.json();
+\fs24 \
+
+\fs20 const reply=d.content?.[0]?.text||'Try again in a sec!';
+\fs24 \
+
+\fs20 chatMsgs.push(\{role:'assistant',content:reply\});
+\fs24 \
+
+\fs20 typing.remove();addMsg('bot',reply);
+\fs24 \
+
+\fs20 \}catch\{typing.remove();addMsg('bot','Connection hiccup! Try again\'a0\cf2 \cb3 \strokec2 {{\NeXTGraphic Attachment.png \width320 \height320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \cb3 \strokec2 ');\}
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function addMsg(role,text)\{
+\fs24 \
+
+\fs20 const box=document.getElementById('chatMessages');
+\fs24 \
+
+\fs20 const d=document.createElement('div');d.className='msg '+role;
+\fs24 \
+
+\fs20 d.innerHTML=`<div class="msg-bubble">$\{text\}</div>`;
+\fs24 \
+
+\fs20 box.appendChild(d);box.scrollTop=box.scrollHeight;
+\fs24 \
+
+\fs20 return d;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 function addTyping()\{
+\fs24 \
+
+\fs20 const box=document.getElementById('chatMessages');
+\fs24 \
+
+\fs20 const d=document.createElement('div');d.className='typing';
+\fs24 \
+
+\fs20 d.innerHTML='<span></span><span></span><span></span>';
+\fs24 \
+
+\fs20 box.appendChild(d);box.scrollTop=box.scrollHeight;
+\fs24 \
+
+\fs20 return d;
+\fs24 \
+
+\fs20 \}
+\fs24 \
+
+\fs20 </script>
+\fs24 \
+\
+
+\fs20 </body>
+\fs24 \
+
+\fs20 </html>}
