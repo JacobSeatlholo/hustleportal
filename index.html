@@ -2,642 +2,626 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Business Hustle Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--accent:#F5C518;--bg:#0a0a0b;--surface:#111114;--text:#e8e8e6;--muted:#7a7a78;--sidebar:260px}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.7;min-height:100vh}
+body{background:#0a0a0b;color:#e8e8e6;font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;max-width:430px;margin:0 auto;min-height:100vh}
 a{text-decoration:none}
 button{font-family:inherit;cursor:pointer}
-
-/* ── DESKTOP LAYOUT ── */
-.app-shell{display:flex;flex-direction:column;min-height:100vh}
-
-/* HEADER */
-.header{position:sticky;top:0;z-index:100;background:rgba(10,10,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid #ffffff0d;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-box{width:36px;height:36px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-box svg{width:26px;height:26px}
-.logo-name{font-weight:900;font-size:16px;line-height:1.2}
-.logo-name span{color:var(--accent)}
-.logo-sub{font-size:10px;color:var(--muted)}
-.header-nav{display:none;align-items:center;gap:4px}
-.header-nav-btn{background:none;border:none;color:var(--muted);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:all .15s}
-.header-nav-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
-.header-nav-btn.active{color:var(--accent);background:rgba(245,197,24,.1)}
-.header-right{display:flex;align-items:center;gap:10px;margin-left:auto}
-.ai-btn{background:#111114;border:1px solid #ffffff20;border-radius:10px;padding:8px 14px;color:var(--text);font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;transition:all .2s}
-.ai-btn.active{background:var(--accent);color:#0a0a0b;border-color:var(--accent)}
-.cta-btn{background:var(--accent);color:#0a0a0b;border:none;border-radius:10px;padding:8px 18px;font-weight:800;font-size:13px;transition:opacity .2s}
-.cta-btn:hover{opacity:.85}
-
-/* BODY LAYOUT */
-.body-wrap{display:flex;flex:1}
-
-/* SIDEBAR — desktop only */
-.sidebar{display:none;width:var(--sidebar);flex-shrink:0;position:sticky;top:61px;height:calc(100vh - 61px);overflow-y:auto;border-right:1px solid #ffffff0d;padding:24px 12px;background:var(--bg)}
-.sidebar-section{margin-bottom:24px}
-.sidebar-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 8px;margin-bottom:6px}
-.sidebar-btn{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--muted);padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;text-align:left;transition:all .15s}
-.sidebar-btn:hover{background:rgba(255,255,255,.05);color:var(--text)}
-.sidebar-btn.active{background:rgba(245,197,24,.1);color:var(--accent)}
-.sidebar-icon{font-size:15px;width:18px;text-align:center}
-.sidebar-badge{margin-left:auto;background:rgba(245,197,24,.15);color:var(--accent);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700}
-
-/* MAIN CONTENT */
-.main-content{flex:1;min-width:0}
-.page-inner{max-width:900px;margin:0 auto;padding:40px 32px 100px}
-
-/* PAGES */
-.page{display:none}
-.page.active{display:block}
-
-/* BOTTOM NAV — mobile only */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,11,.96);backdrop-filter:blur(20px);border-top:1px solid #ffffff0d;display:flex;z-index:50}
-.nav-btn{flex:1;background:none;border:none;color:var(--muted);padding:9px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:600;transition:color .15s}
-.nav-btn.active{color:var(--accent);font-weight:800}
-.nav-btn .icon{font-size:18px}
-.nav-btn.active .icon{filter:drop-shadow(0 0 8px #F5C518)}
-
-/* ── HOME ── */
-.hero{text-align:center;padding:56px 24px 40px;position:relative}
-.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,197,24,.15) 0%,transparent 60%);pointer-events:none}
-.hero-logo{width:90px;height:90px;background:var(--accent);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 0 50px rgba(245,197,24,.4)}
-.hero-logo svg{width:66px;height:66px}
-.live-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(245,197,24,.15);border:1px solid rgba(245,197,24,.35);border-radius:100px;padding:6px 16px;margin-bottom:20px;font-size:12px;color:var(--accent);font-weight:700}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;flex-shrink:0}
-h1{font-size:clamp(36px,6vw,64px);font-weight:900;line-height:1.05;letter-spacing:-2.5px;margin-bottom:14px}
-h1 span{color:var(--accent)}
-.tagline{font-size:clamp(16px,2.5vw,22px);color:var(--muted);min-height:32px;font-weight:600;margin-bottom:32px}
-.cursor{color:var(--accent);animation:blink .7s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn-primary{background:var(--accent);color:#0a0a0b;border:none;border-radius:12px;padding:14px 28px;font-weight:800;font-size:15px;box-shadow:0 0 28px rgba(245,197,24,.45);transition:all .2s;text-decoration:none;display:inline-block}
-.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
-.btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 24px;font-weight:700;font-size:15px;transition:all .2s}
-.btn-ghost:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
-.stat{background:var(--surface);border:1px solid #ffffff0d;border-radius:16px;padding:20px 12px;text-align:center}
-.stat-num{font-size:28px;font-weight:900;color:var(--accent)}
-.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
-
-/* BANNER */
-.banner{display:flex;align-items:center;gap:16px;background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.22);border-radius:16px;padding:18px 22px;margin-bottom:24px;text-decoration:none;transition:background .2s}
-.banner:hover{background:rgba(245,197,24,.13)}
-.banner-icon{font-size:30px;flex-shrink:0}
-.banner-title{font-weight:800;font-size:15px;color:var(--text)}
-.banner-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.banner-arrow{color:var(--accent);font-size:20px;margin-left:auto;font-weight:900}
-
-/* SECTION */
-.section{margin-bottom:28px}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{font-weight:800;font-size:17px}
-.see-all{background:none;border:none;color:var(--accent);font-weight:700;font-size:13px}
-
-/* QUICK ACTIONS */
-.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.quick-card{display:flex;flex-direction:column;gap:7px;border-radius:14px;padding:16px;text-decoration:none;transition:transform .15s}
-.quick-card:hover{transform:translateY(-2px)}
-.quick-card .q-icon{font-size:26px}
-.quick-card .q-title{font-weight:700;font-size:14px}
-.quick-card .q-sub{font-size:12px;color:var(--muted)}
-.qc-green{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25)}
-.qc-green .q-title{color:#25D366}
-.qc-yellow{background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25)}
-.qc-yellow .q-title{color:var(--accent)}
-.qc-purple{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25)}
-.qc-purple .q-title{color:#a78bfa}
-.qc-teal{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25)}
-.qc-teal .q-title{color:#34d399}
-
-/* SERVICES GRID */
-.services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.svc-card{background:var(--surface);border:1px solid #ffffff0d;border-radius:14px;padding:18px;cursor:pointer;transition:all .2s}
-.svc-card:hover{transform:translateY(-2px)}
-.svc-icon{font-size:26px;margin-bottom:10px}
-.svc-title{font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px}
-.svc-desc{font-size:12px;color:var(--muted)}
-
-/* QUOTE */
-.quote{background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.18);border-radius:16px;padding:22px}
-.quote p{font-style:italic;font-size:15px;color:var(--text);line-height:1.65;margin-bottom:10px}
-.quote cite{font-size:12px;color:var(--muted)}
-
-/* ── SERVICES PAGE ── */
-.page-header{display:flex;align-items:center;gap:14px;margin-bottom:28px}
-.page-title{font-size:24px;font-weight:900;margin:0}
-.page-subtitle{color:var(--muted);font-size:13px;margin:0}
-.svc-list{display:flex;flex-direction:column;gap:12px}
-.svc-item{background:var(--surface);border:1px solid #ffffff0d;border-radius:14px;padding:18px;cursor:pointer;transition:border-color .2s}
-.svc-item-header{display:flex;align-items:center;gap:14px}
-.svc-item-icon{font-size:28px}
-.svc-item-info{flex:1}
-.svc-item-title{font-weight:800;font-size:15px}
-.svc-item-desc{font-size:13px;color:var(--muted)}
-.svc-arrow{color:var(--muted);font-size:20px;transition:transform .2s}
-.svc-item.open .svc-arrow{transform:rotate(90deg)}
-.svc-detail{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #ffffff0d}
-.svc-item.open .svc-detail{display:block}
-.svc-detail p{font-size:14px;color:#9a9a98;line-height:1.7;margin-bottom:14px}
-.svc-detail a{display:inline-block;border-radius:10px;padding:9px 18px;font-weight:800;font-size:13px;color:#0a0a0b;transition:opacity .2s}
-.svc-detail a:hover{opacity:.85}
-
-/* ── SHOP PAGE ── */
-.shop-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
-.cart-icon{position:relative;background:var(--surface);border:1px solid #ffffff15;border-radius:10px;padding:8px 14px;font-size:20px;cursor:pointer}
-.cart-count{position:absolute;top:-6px;right:-6px;background:#f87171;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800}
-.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.shop-card{background:var(--surface);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:transform .2s}
-.shop-card:hover{transform:translateY(-3px)}
-.shop-tag{position:absolute;top:0;right:0;font-size:11px;font-weight:800;padding:5px 14px;border-radius:0 16px 0 10px;color:#0a0a0b}
-.shop-icon{font-size:32px;margin-bottom:10px}
-.shop-title{font-weight:800;font-size:17px;margin-bottom:5px}
-.shop-desc{font-size:13px;color:var(--muted);margin-bottom:16px}
-.shop-footer{display:flex;align-items:center;justify-content:space-between}
-.shop-price{font-size:24px;font-weight:900}
-.add-btn{border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:13px;color:#0a0a0b;transition:opacity .2s}
-.add-btn:hover{opacity:.85}
-.cart-summary{margin-top:24px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.3);border-radius:16px;padding:20px}
-.cart-title{font-weight:800;font-size:16px;margin-bottom:12px}
-.cart-item{font-size:14px;color:#9a9a98;margin-bottom:5px}
-.cart-total{font-weight:800;font-size:17px;color:var(--accent);margin:12px 0 14px}
-.checkout-btn{display:block;background:#25D366;color:#fff;text-align:center;text-decoration:none;border-radius:12px;padding:14px;font-weight:800;font-size:15px;transition:opacity .2s}
-.checkout-btn:hover{opacity:.88}
-
-/* ── HUSTLE PAGE ── */
-.hustle-wrap{max-width:580px;margin:0 auto}
-.quiz-card{background:var(--surface);border:1px solid #ffffff0d;border-radius:18px;padding:32px}
-.progress-bar{display:flex;gap:7px;margin-bottom:20px}
-.prog-seg{flex:1;height:5px;border-radius:3px;background:#ffffff15;transition:background .3s}
-.prog-seg.done{background:var(--accent)}
-.q-num{font-size:12px;color:var(--muted);margin-bottom:12px}
-.q-text{font-size:18px;font-weight:700;margin-bottom:22px;line-height:1.5}
-.q-options{display:flex;flex-direction:column;gap:12px}
-.q-opt{background:#0a0a0b;border:1px solid #ffffff15;border-radius:12px;padding:14px 18px;color:var(--text);font-weight:600;font-size:15px;text-align:left;transition:all .15s}
-.q-opt:hover{border-color:rgba(245,197,24,.6);color:var(--accent)}
-.result-wrap{max-width:520px;margin:0 auto;text-align:center;padding:20px}
-.result-emoji{font-size:64px;margin-bottom:14px}
-.result-score{font-size:36px;font-weight:900;margin-bottom:8px}
-.result-label{font-size:24px;font-weight:800;margin-bottom:12px}
-.result-msg{color:var(--muted);margin-bottom:24px;line-height:1.65;font-size:16px}
-.result-bar-wrap{background:var(--surface);border-radius:100px;height:14px;margin:0 0 28px;overflow:hidden}
-.result-bar{height:100%;border-radius:100px}
-.result-btns{display:flex;flex-direction:column;gap:12px}
-.result-btn-primary{display:block;background:var(--accent);color:#0a0a0b;text-decoration:none;border-radius:12px;padding:15px;font-weight:800;font-size:16px;transition:opacity .2s}
-.result-btn-primary:hover{opacity:.88}
-.result-btn-wa{display:block;background:#25D366;color:#fff;text-decoration:none;border-radius:12px;padding:14px;font-weight:800;font-size:15px;transition:opacity .2s}
-.result-btn-wa:hover{opacity:.88}
-.result-btn-ghost{background:var(--surface);border:1px solid #ffffff15;color:var(--text);border-radius:12px;padding:13px;font-weight:700;font-size:15px;width:100%;transition:all .2s}
-.result-btn-ghost:hover{border-color:#ffffff30}
-
-/* ── CONTACT PAGE ── */
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.contact-link{display:flex;align-items:center;gap:14px;border-radius:16px;padding:18px 20px;text-decoration:none;transition:all .2s}
-.contact-link:hover{transform:translateY(-2px)}
-.cl-green{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25)}
-.cl-yellow{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.22)}
-.cl-teal{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.22)}
-.contact-link-title{font-weight:800;font-size:14px}
-.contact-link-sub{font-size:12px;color:var(--muted)}
-.cl-green .contact-link-title{color:#25D366}
-.cl-yellow .contact-link-title{color:var(--accent)}
-.cl-teal .contact-link-title{color:#34d399}
-.cl-arrow{margin-left:auto;font-size:18px}
-.cl-green .cl-arrow{color:#25D366}
-.cl-yellow .cl-arrow{color:var(--accent)}
-.cl-teal .cl-arrow{color:#34d399}
-.form-box{background:var(--surface);border:1px solid #ffffff0d;border-radius:16px;padding:24px}
-.form-title{font-weight:700;font-size:15px;margin-bottom:16px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.form-input{display:block;width:100%;background:#0a0a0b;border:1px solid #ffffff15;border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;font-family:inherit;transition:border-color .2s}
-.form-input:focus{border-color:var(--accent)}
-textarea.form-input{resize:none;margin-bottom:16px}
-.form-submit{width:100%;background:var(--accent);color:#0a0a0b;border:none;border-radius:12px;padding:14px;font-weight:800;font-size:16px;transition:opacity .2s}
-.form-submit:hover{opacity:.85}
-.info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.info-card{background:var(--surface);border:1px solid #ffffff0d;border-radius:12px;padding:14px}
-.info-icon{font-size:20px;margin-bottom:5px}
-.info-label{font-size:11px;color:var(--muted)}
-.info-val{font-size:12px;font-weight:700;color:var(--text);margin-top:3px}
-.success-wrap{text-align:center;padding:80px 20px}
-.success-emoji{font-size:56px;margin-bottom:20px}
-.success-title{font-size:26px;font-weight:900;margin-bottom:12px}
-.success-msg{color:var(--muted);margin-bottom:28px;font-size:16px}
-
-/* ── AI CHAT ── */
-.chat-wrap{position:fixed;bottom:24px;right:24px;width:360px;background:#111114;border:1px solid rgba(245,197,24,.35);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.7);z-index:999;display:flex;flex-direction:column;overflow:hidden}
-.chat-header{background:var(--accent);padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
-.chat-header-left{display:flex;align-items:center;gap:10px}
-.chat-header-name{font-weight:800;color:#0a0a0b;font-size:14px}
-.chat-header-sub{font-size:11px;color:rgba(10,10,11,.6)}
-.chat-close{background:none;border:none;font-size:18px;color:rgba(10,10,11,.5);cursor:pointer}
-.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:300px}
-.msg{display:flex}
-.msg.user{justify-content:flex-end}
-.msg-bubble{padding:10px 14px;max-width:82%;font-size:13px;line-height:1.55}
-.msg.user .msg-bubble{background:var(--accent);color:#0a0a0b;border-radius:16px 16px 4px 16px}
-.msg.bot .msg-bubble{background:#1e1e22;color:var(--text);border-radius:16px 16px 16px 4px}
-.typing{display:flex;gap:5px;padding:10px 14px;background:#1e1e22;border-radius:16px 16px 16px 4px;width:fit-content}
-.typing span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:bounce 1s infinite}
-.typing span:nth-child(2){animation-delay:.2s}
-.typing span:nth-child(3){animation-delay:.4s}
+input,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.chat-input-row{padding:10px 12px;border-top:1px solid #ffffff10;display:flex;gap:8px}
-.chat-input{flex:1;background:#0a0a0b;border:1px solid #ffffff15;border-radius:10px;padding:10px 13px;color:var(--text);font-size:13px;outline:none;font-family:inherit;transition:border-color .2s}
-.chat-input:focus{border-color:var(--accent)}
-.chat-send{background:var(--accent);border:none;border-radius:10px;width:40px;font-size:16px;font-weight:800;color:#0a0a0b;transition:opacity .2s}
-.chat-send:hover{opacity:.85}
-
-/* TOAST */
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#34d399;color:#0a0a0b;padding:11px 22px;border-radius:100px;font-weight:700;font-size:13px;z-index:9999;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
-.toast.show{opacity:1}
-
-/* ── RESPONSIVE BREAKPOINTS ── */
-@media(min-width:768px){
-  .header-nav{display:flex}
-  .bottom-nav{display:none}
-  .sidebar{display:block}
-  .page-inner{padding:40px 40px 60px}
-  .quick-grid{grid-template-columns:repeat(4,1fr)}
-  .services-grid{grid-template-columns:repeat(3,1fr)}
-  .contact-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:767px){
-  .page-inner{padding:24px 16px 90px}
-  .shop-grid{grid-template-columns:1fr}
-  .form-row{grid-template-columns:1fr}
-  .info-grid{grid-template-columns:repeat(2,1fr)}
-  .chat-wrap{bottom:80px;right:10px;left:10px;width:auto}
-  .contact-grid{grid-template-columns:1fr}
-  .stats{gap:10px}
-}
-@media(min-width:1200px){
-  .services-grid{grid-template-columns:repeat(3,1fr)}
-  .shop-grid{grid-template-columns:repeat(2,1fr)}
-}
 </style>
 </head>
 <body>
-<div class="app-shell">
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef}=React;
+const A="#F5C518";
 
-<!-- HEADER -->
-<div class="header">
-  <div class="logo-wrap">
-    <div class="logo-box">
-      <svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,'Times New Roman',serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,'Times New Roman',serif" font-size="24" fill="#0a0a0b">H</text></svg>
-    </div>
-    <div>
-      <div class="logo-name">Business <span>Hustle</span> ©</div>
-      <div class="logo-sub">businesshustle.co.za</div>
-    </div>
-  </div>
-  <nav class="header-nav">
-    <button class="header-nav-btn active" onclick="showPage('home')" id="hnav-home">Home</button>
-    <button class="header-nav-btn" onclick="showPage('services')" id="hnav-services">Services</button>
-    <button class="header-nav-btn" onclick="showPage('shop')" id="hnav-shop">Shop</button>
-    <button class="header-nav-btn" onclick="showPage('hustle')" id="hnav-hustle">Hustle Score</button>
-    <button class="header-nav-btn" onclick="showPage('contact')" id="hnav-contact">Contact</button>
-  </nav>
-  <div class="header-right">
-    <button class="ai-btn" id="aiBtn" onclick="toggleChat()">🤖 AI Advisor</button>
-    <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="cta-btn">Get Started →</a>
-  </div>
-</div>
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
 
-<div class="body-wrap">
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-section">
-    <div class="sidebar-label">Overview</div>
-    <button class="sidebar-btn active" onclick="showPage('home')" id="snav-home"><span class="sidebar-icon">🏠</span>Home</button>
-    <button class="sidebar-btn" onclick="showPage('services')" id="snav-services"><span class="sidebar-icon">⚡</span>Services</button>
-    <button class="sidebar-btn" onclick="showPage('shop')" id="snav-shop"><span class="sidebar-icon">🛒</span>Shop<span class="sidebar-badge" id="sideCartBadge" style="display:none">0</span></button>
+function BHLogo({size=34}){
+  return <div style={{width:size,height:size,background:A,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+    <svg width={size*.75} height={size*.75} viewBox="0 0 52 52">
+      <text x="1" y="36" fontFamily="Georgia,serif" fontSize="40" fill="#0a0a0b">B</text>
+      <text x="20" y="50" fontFamily="Georgia,serif" fontSize="24" fill="#0a0a0b">H</text>
+    </svg>
   </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Tools</div>
-    <button class="sidebar-btn" onclick="showPage('hustle')" id="snav-hustle"><span class="sidebar-icon">🔥</span>Hustle Score</button>
-    <button class="sidebar-btn" onclick="showPage('contact')" id="snav-contact"><span class="sidebar-icon">💬</span>Contact</button>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Links</div>
-    <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="sidebar-btn"><span class="sidebar-icon">📚</span>Resources</a>
-    <a href="https://wa.me/27744815163" target="_blank" class="sidebar-btn"><span class="sidebar-icon">💬</span>WhatsApp</a>
-    <a href="https://www.businesshustle.co.za" target="_blank" class="sidebar-btn"><span class="sidebar-icon">🌐</span>Website</a>
-  </div>
-</aside>
+}
 
-<!-- MAIN -->
-<main class="main-content">
+function XPToast({msg,onDone}){
+  useEffect(()=>{const t=setTimeout(onDone,2400);return()=>clearTimeout(t);},[]);
+  return <div style={{position:"fixed",top:68,left:"50%",transform:"translateX(-50%)",background:A,color:"#0a0a0b",padding:"10px 20px",borderRadius:100,fontWeight:800,fontSize:13,zIndex:9999,whiteSpace:"nowrap",animation:"slideDown .3s ease"}}>{msg}</div>
+}
 
-<!-- HOME -->
-<div class="page active" id="page-home">
-<div class="page-inner">
-  <div class="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-logo">
-      <svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg>
-    </div>
-    <div class="live-badge"><span class="live-dot"></span>🇿🇦 South Africa's Digital Growth Partner</div>
-    <h1>Business <span>Hustle</span> ©</h1>
-    <div class="tagline" id="tagline">Explore. Adapt. Evolve.<span class="cursor">|</span></div>
-    <div class="hero-btns">
-      <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="btn-primary">Get Started →</a>
-      <button class="btn-ghost" onclick="showPage('hustle')">🔥 Check Hustle Score</button>
-    </div>
-  </div>
+const BADGES=[
+  {min:0,icon:"🌱",label:"Seedling",color:"#34d399"},
+  {min:100,icon:"🔥",label:"Side Hustler",color:"#fb923c"},
+  {min:300,icon:"⚡",label:"Grind Mode",color:A},
+  {min:600,icon:"💎",label:"Power Player",color:"#60a5fa"},
+  {min:1000,icon:"👑",label:"Full Hustle",color:"#a78bfa"},
+];
+function getBadge(xp){return[...BADGES].reverse().find(b=>xp>=b.min)||BADGES[0];}
+function getNext(xp){return BADGES.find(b=>b.min>xp)||null;}
 
-  <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="banner">
-    <span class="banner-icon">🚀</span>
-    <div><div class="banner-title">Ready to grow your business?</div><div class="banner-sub">Visit businesshustle.co.za/get-started for resources, guides & tools</div></div>
-    <span class="banner-arrow">→</span>
-  </a>
+/* ── HOME ── */
+function Home({setPage,xp,streak,addXP,leads}){
+  const badge=getBadge(xp),next=getNext(xp);
+  const prog=next?Math.round(((xp-badge.min)/(next.min-badge.min))*100):100;
+  const tags=["Explore. Adapt. Evolve.","Build. Launch. Scale.","Less friction. More revenue."];
+  const [ti,setTi]=useState(0),[disp,setDisp]=useState(""),[done,setDone]=useState(false);
+  useEffect(()=>{setDisp("");setDone(false);let i=0;const t=setInterval(()=>{i++;setDisp(tags[ti].slice(0,i));if(i>=tags[ti].length){setDone(true);clearInterval(t);}},45);return()=>clearInterval(t);},[ti]);
+  useEffect(()=>{if(done){const t=setTimeout(()=>setTi(i=>(i+1)%tags.length),1800);return()=>clearTimeout(t);}},[done]);
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Founders Helped</div></div>
-    <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Services Offered</div></div>
-    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Client Rating</div></div>
-  </div>
-
-  <div class="section">
-    <div class="section-header"><div class="section-title">Quick Actions</div></div>
-    <div class="quick-grid">
-      <a href="https://wa.me/27744815163" target="_blank" class="quick-card qc-green"><span class="q-icon">💬</span><span class="q-title">WhatsApp Us</span><span class="q-sub">+27 74 481 5163</span></a>
-      <a href="https://www.businesshustle.co.za" target="_blank" class="quick-card qc-yellow"><span class="q-icon">🌐</span><span class="q-title">Visit Website</span><span class="q-sub">businesshustle.co.za</span></a>
-      <a href="#" onclick="showPage('shop');return false" class="quick-card qc-purple"><span class="q-icon">🛒</span><span class="q-title">View Shop</span><span class="q-sub">Starter packages</span></a>
-      <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="quick-card qc-teal"><span class="q-icon">📚</span><span class="q-title">Resources</span><span class="q-sub">Get Started guide</span></a>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header"><div class="section-title">Our Services</div><button class="see-all" onclick="showPage('services')">See all →</button></div>
-    <div class="services-grid">
-      <div class="svc-card" style="border-color:rgba(245,197,24,.2)"><div class="svc-icon">🎯</div><div class="svc-title">Brand Strategy</div><div class="svc-desc">Position yourself to win</div></div>
-      <div class="svc-card" style="border-color:rgba(167,139,250,.2)"><div class="svc-icon">💻</div><div class="svc-title">Web Development</div><div class="svc-desc">Sites that convert</div></div>
-      <div class="svc-card" style="border-color:rgba(52,211,153,.2)"><div class="svc-icon">📈</div><div class="svc-title">Digital Marketing</div><div class="svc-desc">Grow fast, grow smart</div></div>
-      <div class="svc-card" style="border-color:rgba(248,113,113,.2)"><div class="svc-icon">📸</div><div class="svc-title">Content Creation</div><div class="svc-desc">Stories that stick</div></div>
-      <div class="svc-card" style="border-color:rgba(96,165,250,.2)"><div class="svc-icon">🤝</div><div class="svc-title">Expert Network</div><div class="svc-desc">Connect with pros</div></div>
-      <div class="svc-card" style="border-color:rgba(251,146,60,.2)"><div class="svc-icon">🧠</div><div class="svc-title">Business Coaching</div><div class="svc-desc">Level up your mindset</div></div>
-    </div>
-  </div>
-
-  <div class="quote">
-    <p>"Think of technology as a verb, not a noun. It provides the tools — creative people provide the imagination."</p>
-    <cite>— Red Burns (1925–2013)</cite>
-  </div>
-</div>
-</div>
-
-<!-- SERVICES -->
-<div class="page" id="page-services">
-<div class="page-inner">
-  <div class="page-header">
-    <div class="logo-box"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
-    <div><p class="page-title">All Services</p><p class="page-subtitle">Tap a service to learn more</p></div>
-  </div>
-  <div class="svc-list" id="svcList"></div>
-  <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="banner" style="margin-top:24px">
-    <span class="banner-icon">📚</span>
-    <div><div class="banner-title">Resource Centre</div><div class="banner-sub">businesshustle.co.za/get-started</div></div>
-    <span class="banner-arrow">→</span>
-  </a>
-</div>
-</div>
-
-<!-- SHOP -->
-<div class="page" id="page-shop">
-<div class="page-inner">
-  <div class="shop-header">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div class="logo-box"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
-      <div><p class="page-title" style="margin:0">Shop</p><p class="page-subtitle" style="margin:0">Ready-made packages for every stage</p></div>
-    </div>
-    <div class="cart-icon" id="cartIcon">🛒<span class="cart-count" id="cartCount" style="display:none">0</span></div>
-  </div>
-  <div class="shop-grid" id="shopList"></div>
-  <div id="cartSummary" style="display:none" class="cart-summary">
-    <div class="cart-title">🛒 Cart (<span id="cartNum">0</span> items)</div>
-    <div id="cartItems"></div>
-    <div class="cart-total">Total: R<span id="cartTotal">0</span></div>
-    <a id="checkoutBtn" href="#" target="_blank" class="checkout-btn">💬 Checkout via WhatsApp →</a>
-  </div>
-</div>
-</div>
-
-<!-- HUSTLE -->
-<div class="page" id="page-hustle">
-<div class="page-inner">
-  <div id="hustleQuiz" class="hustle-wrap"></div>
-  <div id="hustleResult" class="result-wrap" style="display:none"></div>
-</div>
-</div>
-
-<!-- CONTACT -->
-<div class="page" id="page-contact">
-<div class="page-inner">
-  <div id="contactMain">
-    <div class="page-header" style="margin-bottom:24px">
-      <div class="logo-box"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
-      <div><p class="page-title">Get in Touch</p><p class="page-subtitle">We reply within 2 hours — WhatsApp is fastest</p></div>
-    </div>
-    <div class="contact-grid">
-      <a href="https://wa.me/27744815163" target="_blank" class="contact-link cl-green">
-        <span style="font-size:28px">💬</span><div><div class="contact-link-title">WhatsApp</div><div class="contact-link-sub">+27 74 481 5163</div></div><span class="cl-arrow">→</span>
-      </a>
-      <a href="https://www.businesshustle.co.za" target="_blank" class="contact-link cl-yellow">
-        <span style="font-size:28px">🌐</span><div><div class="contact-link-title">Website</div><div class="contact-link-sub">businesshustle.co.za</div></div><span class="cl-arrow">→</span>
-      </a>
-      <a href="https://www.businesshustle.co.za/get-started" target="_blank" class="contact-link cl-teal">
-        <span style="font-size:28px">📚</span><div><div class="contact-link-title">Resources</div><div class="contact-link-sub">Get Started page</div></div><span class="cl-arrow">→</span>
-      </a>
-    </div>
-    <div class="form-box" style="margin-top:14px">
-      <div class="form-title">Send a message</div>
-      <div class="form-row">
-        <input class="form-input" id="fname" placeholder="Your name" type="text"/>
-        <input class="form-input" id="femail" placeholder="Email address" type="email"/>
+  return <div style={{paddingBottom:40}}>
+    <div style={{textAlign:"center",padding:"28px 20px 20px",position:"relative"}}>
+      <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse at 50% 0%,${A}20 0%,transparent 65%)`,pointerEvents:"none"}}/>
+      <div style={{width:72,height:72,background:A,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",boxShadow:`0 0 32px ${A}50`}}>
+        <svg width="52" height="52" viewBox="0 0 52 52"><text x="1" y="36" fontFamily="Georgia,serif" fontSize="40" fill="#0a0a0b">B</text><text x="20" y="50" fontFamily="Georgia,serif" fontSize="24" fill="#0a0a0b">H</text></svg>
       </div>
-      <textarea class="form-input" id="fmsg" placeholder="Tell us about your project…" rows="4"></textarea>
-      <button class="form-submit" onclick="submitForm()">Send Message →</button>
+      <div style={{display:"inline-flex",alignItems:"center",gap:7,background:`${A}18`,border:`1px solid ${A}40`,borderRadius:100,padding:"5px 14px",marginBottom:12}}>
+        <span style={{width:7,height:7,borderRadius:"50%",background:"#34d399",display:"inline-block",boxShadow:"0 0 8px #34d399"}}/>
+        <span style={{fontSize:11,color:A,fontWeight:700}}>🇿🇦 South Africa's Digital Growth Partner</span>
+      </div>
+      <h1 style={{fontSize:"clamp(28px,8vw,44px)",fontWeight:900,lineHeight:1.1,margin:"0 0 8px",letterSpacing:-2}}>Business <span style={{color:A}}>Hustle</span> ©</h1>
+      <div style={{fontSize:16,color:"#7a7a78",minHeight:26,fontWeight:600,marginBottom:20}}>{disp}<span style={{opacity:done?0:1,color:A}}>|</span></div>
+      <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
+        <a href="https://www.businesshustle.co.za/get-started" target="_blank" onClick={()=>addXP(20,"🚀 +20 XP!")} style={{background:A,color:"#0a0a0b",borderRadius:12,padding:"12px 22px",fontWeight:800,fontSize:14,boxShadow:`0 0 20px ${A}50`}}>Get Started →</a>
+        <button onClick={()=>setPage("hustle")} style={{background:"transparent",color:"#e8e8e6",border:"1px solid #ffffff20",borderRadius:12,padding:"12px 18px",fontWeight:700,fontSize:14}}>🔥 Hustle Score</button>
+      </div>
     </div>
-    <div class="info-grid">
-      <div class="info-card"><div class="info-icon">🌐</div><div class="info-label">Website</div><div class="info-val">businesshustle.co.za</div></div>
-      <div class="info-card"><div class="info-icon">💬</div><div class="info-label">WhatsApp</div><div class="info-val">+27 74 481 5163</div></div>
-      <div class="info-card"><div class="info-icon">📚</div><div class="info-label">Resources</div><div class="info-val">Get Started page</div></div>
-      <div class="info-card"><div class="info-icon">📍</div><div class="info-label">Location</div><div class="info-val">South Africa 🇿🇦</div></div>
+
+    <div style={{margin:"0 16px 16px",background:"#111114",border:`1px solid ${badge.color}40`,borderRadius:16,padding:16}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <span style={{fontSize:28}}>{badge.icon}</span>
+          <div><div style={{fontWeight:800,fontSize:15,color:badge.color}}>{badge.label}</div><div style={{fontSize:11,color:"#7a7a78"}}>{xp} XP total</div></div>
+        </div>
+        <div style={{textAlign:"right"}}>
+          <div style={{fontSize:11,color:"#7a7a78",marginBottom:4}}>🔥 {streak} day streak</div>
+          {next&&<div style={{fontSize:11,color:"#7a7a78"}}>{next.min-xp} XP to {next.icon}</div>}
+        </div>
+      </div>
+      <div style={{background:"#ffffff10",borderRadius:100,height:6,overflow:"hidden"}}>
+        <div style={{height:"100%",width:`${prog}%`,background:`linear-gradient(90deg,${badge.color},${A})`,borderRadius:100,transition:"width .5s ease"}}/>
+      </div>
+    </div>
+
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,padding:"0 16px 16px"}}>
+      {[["500+","Founders"],["12+","Services"],["4.9★","Rating"]].map(([n,l])=>(
+        <div key={l} style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:"12px 6px",textAlign:"center"}}>
+          <div style={{fontSize:20,fontWeight:900,color:A}}>{n}</div>
+          <div style={{fontSize:10,color:"#7a7a78",marginTop:2}}>{l}</div>
+        </div>
+      ))}
+    </div>
+
+    <div style={{padding:"0 16px 16px"}}>
+      <div style={{fontWeight:800,fontSize:14,marginBottom:10}}>Quick Actions</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <a href="https://wa.me/27744815163" target="_blank" onClick={()=>addXP(10,"💬 +10 XP!")} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(37,211,102,.1)",border:"1px solid rgba(37,211,102,.3)",borderRadius:14,padding:14}}>
+          <span style={{fontSize:22}}>💬</span><span style={{fontWeight:700,fontSize:13,color:"#25D366"}}>WhatsApp</span><span style={{fontSize:11,color:"#7a7a78"}}>+27 74 481 5163</span>
+        </a>
+        <a href="https://www.businesshustle.co.za" target="_blank" onClick={()=>addXP(10,"🌐 +10 XP!")} style={{display:"flex",flexDirection:"column",gap:5,background:`${A}12`,border:`1px solid ${A}30`,borderRadius:14,padding:14}}>
+          <span style={{fontSize:22}}>🌐</span><span style={{fontWeight:700,fontSize:13,color:A}}>Website</span><span style={{fontSize:11,color:"#7a7a78"}}>businesshustle.co.za</span>
+        </a>
+        <button onClick={()=>{setPage("plan");addXP(5,"🧠 +5 XP!");}} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(167,139,250,.1)",border:"1px solid rgba(167,139,250,.3)",borderRadius:14,padding:14,textAlign:"left"}}>
+          <span style={{fontSize:22}}>🧠</span><span style={{fontWeight:700,fontSize:13,color:"#a78bfa"}}>AI Plan</span><span style={{fontSize:11,color:"#7a7a78"}}>Generate business plan</span>
+        </button>
+        <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.3)",borderRadius:14,padding:14}}>
+          <span style={{fontSize:22}}>📚</span><span style={{fontWeight:700,fontSize:13,color:"#34d399"}}>Resources</span><span style={{fontSize:11,color:"#7a7a78"}}>Get Started guide</span>
+        </a>
+      </div>
+    </div>
+
+    <div style={{margin:"0 16px 12px"}}>
+      <button onClick={()=>setPage("challenges")} style={{width:"100%",background:"linear-gradient(120deg,#1a1200,#111114)",border:`1px solid ${A}50`,borderRadius:16,padding:16,textAlign:"left",display:"flex",alignItems:"center",gap:14}}>
+        <span style={{fontSize:32}}>⚡</span>
+        <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:A}}>Daily Hustle Challenges</div><div style={{fontSize:12,color:"#7a7a78",marginTop:2}}>Complete tasks. Earn XP. Level up.</div></div>
+        <span style={{color:A,fontWeight:900,fontSize:18}}>→</span>
+      </button>
+    </div>
+
+    <div style={{margin:"0 16px"}}>
+      <button onClick={()=>setPage("dashboard")} style={{width:"100%",background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:16,textAlign:"left",display:"flex",alignItems:"center",gap:14}}>
+        <span style={{fontSize:32}}>📊</span>
+        <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:"#60a5fa"}}>Analytics Dashboard</div><div style={{fontSize:12,color:"#7a7a78",marginTop:2}}>{leads.length} leads captured</div></div>
+        <span style={{color:"#60a5fa",fontWeight:900,fontSize:18}}>→</span>
+      </button>
     </div>
   </div>
-  <div id="contactSuccess" class="success-wrap" style="display:none">
-    <div class="success-emoji">🎉</div>
-    <div class="success-title">Message sent!</div>
-    <div class="success-msg">We'll hit you back within 2 hours. The hustle never sleeps.</div>
-    <button class="btn-primary" onclick="document.getElementById('contactSuccess').style.display='none';document.getElementById('contactMain').style.display='block'">Send another →</button>
-  </div>
-</div>
-</div>
+}
 
-</main>
-</div><!-- end body-wrap -->
-
-<!-- BOTTOM NAV (mobile) -->
-<nav class="bottom-nav">
-  <button class="nav-btn active" onclick="showPage('home')" id="nav-home"><span class="icon">🏠</span>Home</button>
-  <button class="nav-btn" onclick="showPage('services')" id="nav-services"><span class="icon">⚡</span>Services</button>
-  <button class="nav-btn" onclick="showPage('shop')" id="nav-shop"><span class="icon">🛒</span>Shop</button>
-  <button class="nav-btn" onclick="showPage('hustle')" id="nav-hustle"><span class="icon">🔥</span>Hustle</button>
-  <button class="nav-btn" onclick="showPage('contact')" id="nav-contact"><span class="icon">💬</span>Contact</button>
-</nav>
-</div><!-- end app-shell -->
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- AI CHAT -->
-<div class="chat-wrap" id="chatWrap" style="display:none">
-  <div class="chat-header">
-    <div class="chat-header-left">
-      <div class="logo-box" style="width:32px;height:32px"><svg viewBox="0 0 52 52" fill="none"><text x="1" y="36" font-family="Georgia,serif" font-size="40" fill="#0a0a0b">B</text><text x="20" y="50" font-family="Georgia,serif" font-size="24" fill="#0a0a0b">H</text></svg></div>
-      <div><div class="chat-header-name">BH AI Advisor</div><div class="chat-header-sub">Powered by Claude</div></div>
+/* ── CHALLENGES ── */
+const CHALLENGES=[
+  {id:"c1",icon:"💬",title:"Send a WhatsApp",desc:"Reach out to a potential client",xp:30,href:"https://wa.me/27744815163"},
+  {id:"c2",icon:"🧠",title:"Generate a Business Plan",desc:"Use the AI planner to draft your strategy",xp:50,page:"plan"},
+  {id:"c3",icon:"🔥",title:"Complete Hustle Score",desc:"Find your hustle level",xp:40,page:"hustle"},
+  {id:"c4",icon:"📚",title:"Visit Resource Page",desc:"Read the Get Started guide",xp:20,href:"https://www.businesshustle.co.za/get-started"},
+  {id:"c5",icon:"🛒",title:"Browse the Shop",desc:"Check our starter packages",xp:15,page:"shop"},
+  {id:"c6",icon:"🌐",title:"Visit the Website",desc:"Explore businesshustle.co.za",xp:20,href:"https://www.businesshustle.co.za"},
+];
+function Challenges({addXP,setPage}){
+  const [done,setDone]=useState(()=>load("bh_challenges",[]));
+  const total=CHALLENGES.reduce((a,c)=>a+c.xp,0);
+  const earned=CHALLENGES.filter(c=>done.includes(c.id)).reduce((a,c)=>a+c.xp,0);
+  function complete(c){
+    if(done.includes(c.id))return;
+    const next=[...done,c.id];setDone(next);save("bh_challenges",next);
+    addXP(c.xp,`${c.icon} +${c.xp} XP — ${c.title}!`);
+    if(c.href)window.open(c.href,"_blank");
+    if(c.page)setPage(c.page);
+  }
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>Daily Challenges</div><div style={{color:"#7a7a78",fontSize:12}}>{done.length}/{CHALLENGES.length} done · {earned}/{total} XP</div></div></div>
+    <div style={{background:"#ffffff10",borderRadius:100,height:6,marginBottom:20,overflow:"hidden"}}>
+      <div style={{height:"100%",width:`${total>0?(earned/total)*100:0}%`,background:`linear-gradient(90deg,${A},#fb923c)`,borderRadius:100,transition:"width .5s"}}/>
     </div>
-    <button class="chat-close" onclick="toggleChat()">✕</button>
+    <div style={{display:"flex",flexDirection:"column",gap:10}}>
+      {CHALLENGES.map(c=>{
+        const isDone=done.includes(c.id);
+        return <div key={c.id} onClick={()=>complete(c)} style={{background:isDone?`${A}10`:"#111114",border:`1px solid ${isDone?A+"50":"#ffffff0d"}`,borderRadius:14,padding:"14px 16px",cursor:isDone?"default":"pointer",display:"flex",alignItems:"center",gap:12,opacity:isDone?.75:1}}>
+          <span style={{fontSize:26}}>{isDone?"✅":c.icon}</span>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:700,fontSize:14,color:isDone?A:"#e8e8e6",textDecoration:isDone?"line-through":"none"}}>{c.title}</div>
+            <div style={{fontSize:12,color:"#7a7a78"}}>{c.desc}</div>
+          </div>
+          <div style={{background:isDone?`${A}20`:"#ffffff08",borderRadius:8,padding:"4px 10px",fontSize:12,fontWeight:700,color:A,flexShrink:0}}>+{c.xp} XP</div>
+        </div>
+      })}
+    </div>
   </div>
-  <div class="chat-messages" id="chatMessages">
-    <div class="msg bot"><div class="msg-bubble">Hey! 👋 I'm your Business Hustle AI advisor. Ask me anything about growing your business!</div></div>
+}
+
+/* ── AI BUSINESS PLAN ── */
+const PQ=[
+  {q:"What is your business name and what does it do?",ph:"e.g. FlexFit SA — an online personal training platform"},
+  {q:"Who is your target customer?",ph:"e.g. Working professionals aged 25–40 in SA cities"},
+  {q:"How will you make money?",ph:"e.g. Monthly subscriptions + one-on-one coaching sessions"},
+  {q:"Who is your biggest competitor and how are you different?",ph:"e.g. Virgin Active, but 10x cheaper and fully remote"},
+  {q:"What is your goal for the next 6 months?",ph:"e.g. 100 paying customers and R50k monthly revenue"},
+];
+function AIPlan({addXP}){
+  const [step,setStep]=useState(0);
+  const [ans,setAns]=useState(Array(PQ.length).fill(""));
+  const [plan,setPlan]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [done,setDone]=useState(false);
+
+  async function generate(){
+    setLoading(true);
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"claude-sonnet-4-20250514",
+          max_tokens:1500,
+          messages:[{role:"user",content:`Create a punchy, actionable 1-page business plan for a South African entrepreneur based on:
+Business: ${ans[0]}
+Target Customer: ${ans[1]}
+Revenue Model: ${ans[2]}
+Competition & Differentiator: ${ans[3]}
+6-Month Goal: ${ans[4]}
+
+Format with these sections using emoji headers:
+🎯 Mission Statement (1 punchy sentence)
+👥 Target Market (2-3 bullet points)
+💰 Revenue Streams (2-3 bullet points)
+⚡ Competitive Advantage (2-3 bullet points)
+📈 6-Month Milestones (4 specific, measurable milestones)
+🚀 First 3 Actions To Take This Week
+
+Keep it energetic, South African, and practical. No corporate fluff. Use simple language.`}]
+        })
+      });
+      const d=await res.json();
+      setPlan(d.content?.[0]?.text||"Unable to generate plan. Please try again.");
+      setDone(true);
+      addXP(100,"🧠 +100 XP for generating your business plan!");
+    }catch(e){
+      setPlan("Connection error. Please check your internet and try again.");
+      setDone(true);
+    }
+    setLoading(false);
+  }
+
+  function reset(){setStep(0);setAns(Array(PQ.length).fill(""));setPlan("");setDone(false);}
+
+  if(done) return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+      <BHLogo size={36}/>
+      <div><div style={{fontSize:18,fontWeight:900}}>Your Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>AI-generated · Ready to share</div></div>
+    </div>
+    <div style={{background:"#111114",border:`1px solid ${A}30`,borderRadius:16,padding:18,marginBottom:16,maxHeight:420,overflowY:"auto"}}>
+      <pre style={{fontFamily:"inherit",fontSize:13,color:"#e8e8e6",lineHeight:1.85,whiteSpace:"pre-wrap",margin:0}}>{plan}</pre>
+    </div>
+    <a href={`https://wa.me/27744815163?text=Hi! I just used Business Hustle AI to create my business plan. Can we discuss next steps?`} target="_blank"
+      style={{display:"block",background:"#25D366",color:"#fff",textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>
+      💬 Discuss with a BH Expert →
+    </a>
+    <a href="https://www.businesshustle.co.za/get-started" target="_blank"
+      style={{display:"block",background:`${A}15`,border:`1px solid ${A}40`,color:A,textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>
+      📚 Get the Full Resource Guide →
+    </a>
+    <button onClick={reset} style={{width:"100%",background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>
+      ← Generate a New Plan
+    </button>
   </div>
-  <div class="chat-input-row">
-    <input class="chat-input" id="chatInput" placeholder="Ask anything…" onkeydown="if(event.key==='Enter')sendChat()"/>
-    <button class="chat-send" onclick="sendChat()">→</button>
+
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+      <BHLogo size={36}/>
+      <div><div style={{fontSize:19,fontWeight:900}}>AI Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>5 questions → full plan · Earn 100 XP</div></div>
+    </div>
+    <div style={{display:"flex",gap:5,marginBottom:20}}>
+      {PQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15",transition:"background .3s"}}/>)}
+    </div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
+      <div style={{fontSize:12,color:"#7a7a78",marginBottom:8}}>Question {step+1} of {PQ.length}</div>
+      <div style={{fontSize:16,fontWeight:700,marginBottom:16,lineHeight:1.5,color:"#e8e8e6"}}>{PQ[step].q}</div>
+      <textarea
+        value={ans[step]}
+        onChange={e=>{const a=[...ans];a[step]=e.target.value;setAns(a);}}
+        placeholder={PQ[step].ph}
+        rows={3}
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,outline:"none",resize:"none",boxSizing:"border-box",marginBottom:14}}
+      />
+      {step<PQ.length-1
+        ?<button onClick={()=>{if(ans[step].trim())setStep(s=>s+1);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>
+          Next →
+        </button>
+        :<button onClick={()=>{if(ans[step].trim())generate();}} disabled={loading} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15,opacity:loading?.7:1}}>
+          {loading?"✨ Generating your plan…":"🚀 Generate My Business Plan"}
+        </button>
+      }
+      {step>0&&<button onClick={()=>setStep(s=>s-1)} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13,marginTop:10,padding:6}}>← Back</button>}
+    </div>
+
+    <div style={{marginTop:16,background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:16}}>
+      <div style={{fontSize:13,fontWeight:700,marginBottom:8,color:"#e8e8e6"}}>💡 What you'll get</div>
+      {["🎯 A clear mission statement","👥 Defined target market","💰 Revenue stream breakdown","📈 4 measurable 6-month milestones","🚀 3 actions to take this week"].map(i=>(
+        <div key={i} style={{fontSize:12,color:"#7a7a78",marginBottom:5,paddingLeft:4}}>{i}</div>
+      ))}
+    </div>
   </div>
-</div>
-
-<script>
-// ── NAV ──
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  ['nav-','hnav-','snav-'].forEach(pre=>{
-    document.querySelectorAll('[id^="'+pre+'"]').forEach(b=>b.classList.remove('active'));
-    const el=document.getElementById(pre+id);
-    if(el)el.classList.add('active');
-  });
-  document.getElementById('page-'+id).classList.add('active');
-  window.scrollTo(0,0);
 }
 
-// ── TYPEWRITER ──
-const taglines=['Explore. Adapt. Evolve.','Build. Launch. Scale.','Less friction. More revenue.'];
-let tIdx=0,cIdx=0,typing=true;
-const tagEl=document.getElementById('tagline');
-function typeStep(){
-  const cur=taglines[tIdx];
-  if(typing){cIdx++;tagEl.innerHTML=cur.slice(0,cIdx)+'<span class="cursor">|</span>';if(cIdx>=cur.length){typing=false;setTimeout(typeStep,1800);return;}}
-  else{typing=true;cIdx=0;tIdx=(tIdx+1)%taglines.length;}
-  setTimeout(typeStep,typing?45:0);
+/* ── DASHBOARD ── */
+function Dashboard({leads,xp,streak}){
+  const badge=getBadge(xp);
+  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const today=new Date().getDay();
+  const bars=days.map((_,i)=>i===(today===0?6:today-1)?95:Math.floor(Math.random()*55)+10);
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>Analytics Dashboard</div><div style={{fontSize:12,color:"#7a7a78"}}>Your hustle metrics</div></div></div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:16}}>
+      {[{icon:"👥",label:"Leads",val:leads.length,color:"#60a5fa"},{icon:"⚡",label:"Total XP",val:xp,color:A},{icon:"🔥",label:"Streak",val:streak+"d",color:"#fb923c"},{icon:"🏆",label:"Badge",val:badge.label,color:badge.color}].map(s=>(
+        <div key={s.label} style={{background:"#111114",border:`1px solid ${s.color}25`,borderRadius:14,padding:"14px 16px"}}>
+          <div style={{fontSize:20,marginBottom:6}}>{s.icon}</div>
+          <div style={{fontSize:18,fontWeight:900,color:s.color}}>{s.val}</div>
+          <div style={{fontSize:11,color:"#7a7a78",marginTop:2}}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:18,marginBottom:16}}>
+      <div style={{fontWeight:700,fontSize:14,marginBottom:14}}>Weekly Activity</div>
+      <div style={{display:"flex",alignItems:"flex-end",gap:6,height:80}}>
+        {bars.map((h,i)=>(
+          <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+            <div style={{width:"100%",background:i===(today===0?6:today-1)?A:`${A}30`,borderRadius:"4px 4px 0 0",height:`${h}%`,minHeight:4}}/>
+            <div style={{fontSize:9,color:"#7a7a78"}}>{days[i].slice(0,2)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:18}}>
+      <div style={{fontWeight:700,fontSize:14,marginBottom:12}}>Recent Leads</div>
+      {leads.length===0
+        ?<div style={{fontSize:13,color:"#7a7a78",textAlign:"center",padding:"20px 0"}}>No leads yet — share your portal! 🚀</div>
+        :leads.slice(-5).reverse().map((l,i)=>(
+          <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 0",borderBottom:i<Math.min(leads.length,5)-1?"1px solid #ffffff08":"none"}}>
+            <div style={{width:34,height:34,background:`${A}20`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:A,flexShrink:0}}>{(l.name||"?")[0].toUpperCase()}</div>
+            <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700}}>{l.name}</div><div style={{fontSize:11,color:"#7a7a78"}}>{l.email}</div></div>
+            <div style={{fontSize:10,color:"#7a7a78"}}>{l.time}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
 }
-typeStep();
 
-// ── SERVICES ──
-const SERVICES=[
-  {icon:'🎯',title:'Brand Strategy',desc:'Position yourself to win',color:'#F5C518',detail:'We craft positioning strategies that make your brand unforgettable — from logo to market narrative.'},
-  {icon:'💻',title:'Web Development',desc:'Sites that convert',color:'#a78bfa',detail:'Custom websites, landing pages and e-commerce stores built for speed, SEO, and conversions.'},
-  {icon:'📈',title:'Digital Marketing',desc:'Grow fast, grow smart',color:'#34d399',detail:'Google Ads, Meta campaigns, SEO and social media management — all data-driven.'},
-  {icon:'📸',title:'Content Creation',desc:'Stories that stick',color:'#f87171',detail:'Photo, video, copywriting and social content that captures your brand voice.'},
-  {icon:'🤝',title:'Expert Network',desc:'Connect with pros',color:'#60a5fa',detail:'Tap into our vetted network of designers, developers and marketers on demand.'},
-  {icon:'🧠',title:'Business Coaching',desc:'Level up your mindset',color:'#fb923c',detail:'1-on-1 sessions and group programmes to sharpen your strategy and execution.'},
+/* ── HUSTLE QUIZ ── */
+const HQ=[
+  {q:"How many hours do you work on your business per week?",opts:["0–5 hrs","6–15 hrs","16–30 hrs","30+ hrs"],scores:[5,15,25,40]},
+  {q:"Do you have a website or online presence?",opts:["Not yet","Social only","Website (basic)","Full digital presence"],scores:[0,10,20,30]},
+  {q:"How do you find new customers?",opts:["Word of mouth only","Some social posting","Consistent marketing","Paid + organic strategy"],scores:[5,10,20,30]},
 ];
-const svcList=document.getElementById('svcList');
-SERVICES.forEach(s=>{
-  const el=document.createElement('div');el.className='svc-item';
-  el.style.borderColor=s.color+'25';
-  el.innerHTML=`<div class="svc-item-header"><span class="svc-item-icon">${s.icon}</span><div class="svc-item-info"><div class="svc-item-title">${s.title}</div><div class="svc-item-desc">${s.desc}</div></div><span class="svc-arrow">›</span></div><div class="svc-detail"><p>${s.detail}</p><a href="https://www.businesshustle.co.za/get-started" target="_blank" style="background:${s.color}">Get Started →</a></div>`;
-  el.querySelector('.svc-item-header').onclick=()=>{el.classList.toggle('open');el.style.borderColor=el.classList.contains('open')?s.color+'60':s.color+'25';};
-  svcList.appendChild(el);
-});
+function HustleQuiz({addXP,setPage}){
+  const [step,setStep]=useState(0),[ans,setAns]=useState([]),[result,setResult]=useState(null);
+  function pick(score){
+    const next=[...ans,score];setAns(next);
+    if(step<HQ.length-1)setStep(s=>s+1);
+    else{const t=next.reduce((a,b)=>a+b,0),mx=HQ.reduce((a,q)=>a+Math.max(...q.scores),0);setResult(Math.round((t/mx)*100));addXP(40,"🔥 +40 XP for Hustle Score!");}
+  }
+  const getL=s=>s<30?["🌱","Seedling","Let's plant the right seeds.","#34d399"]:s<60?["🔥","Side Hustler","Time to turn up the heat!","#fb923c"]:s<85?["⚡","Grind Mode","Let's take you to the next level!",A]:["👑","Full Hustle","Let's scale this empire.","#a78bfa"];
+  if(result!==null){
+    const [em,lb,msg,col]=getL(result);
+    return <div style={{padding:"40px 20px",textAlign:"center"}}>
+      <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><BHLogo size={52}/></div>
+      <div style={{fontSize:52,marginBottom:10}}>{em}</div>
+      <div style={{fontSize:28,fontWeight:900,color:col,marginBottom:6}}>{result}% Hustle</div>
+      <div style={{fontSize:20,fontWeight:800,marginBottom:10}}>{lb}</div>
+      <p style={{color:"#7a7a78",marginBottom:20,lineHeight:1.6,fontSize:14}}>{msg}</p>
+      <div style={{background:"#111114",borderRadius:100,height:12,margin:"0 0 24px",overflow:"hidden"}}><div style={{height:"100%",width:`${result}%`,background:`linear-gradient(90deg,${col},${A})`,borderRadius:100}}/></div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"block",background:A,color:"#0a0a0b",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>🚀 Get the full playbook →</a>
+        <button onClick={()=>setPage("plan")} style={{background:"rgba(167,139,250,.2)",border:"1px solid rgba(167,139,250,.4)",color:"#a78bfa",borderRadius:12,padding:13,fontWeight:800,fontSize:14}}>🧠 Generate My Business Plan</button>
+        <button onClick={()=>{setStep(0);setAns([]);setResult(null);}} style={{background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>Retake Quiz</button>
+      </div>
+    </div>
+  }
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>🔥 Hustle Score</div><div style={{fontSize:12,color:"#7a7a78"}}>Earn 40 XP on completion</div></div></div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
+      <div style={{display:"flex",gap:6,marginBottom:16}}>{HQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15"}}/>)}</div>
+      <div style={{fontSize:12,color:"#7a7a78",marginBottom:10}}>Question {step+1} of {HQ.length}</div>
+      <p style={{fontSize:16,fontWeight:700,marginBottom:18,lineHeight:1.5}}>{HQ[step].q}</p>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {HQ[step].opts.map((o,i)=>(
+          <button key={i} onClick={()=>pick(HQ[step].scores[i])} style={{background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:12,padding:"13px 16px",color:"#e8e8e6",fontWeight:600,fontSize:14,textAlign:"left"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=`${A}60`;e.currentTarget.style.color=A;}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor="#ffffff15";e.currentTarget.style.color="#e8e8e6";}}>
+            {o}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+}
 
-// ── SHOP ──
-const SHOP=[
-  {icon:'📦',title:'Starter Pack',price:499,tag:'Popular',desc:'Logo, business card & 1-page site',color:'#F5C518'},
-  {icon:'🚀',title:'Growth Bundle',price:1999,tag:'Best Value',desc:'Full brand kit + social templates + ads setup',color:'#34d399'},
-  {icon:'👑',title:'Scale Suite',price:4999,tag:'Premium',desc:'Everything + dedicated expert + 3-month support',color:'#a78bfa'},
-  {icon:'📱',title:'Social Media Kit',price:799,tag:'New',desc:'30 custom posts + captions + scheduling',color:'#f87171'},
+/* ── SHOP ── */
+const SI=[
+  {id:1,icon:"📦",title:"Starter Pack",price:499,tag:"Popular",desc:"Logo, business card & 1-page site",color:"#F5C518"},
+  {id:2,icon:"🚀",title:"Growth Bundle",price:1999,tag:"Best Value",desc:"Full brand kit + social templates + ads setup",color:"#34d399"},
+  {id:3,icon:"👑",title:"Scale Suite",price:4999,tag:"Premium",desc:"Everything + dedicated expert + 3-month support",color:"#a78bfa"},
+  {id:4,icon:"📱",title:"Social Media Kit",price:799,tag:"New",desc:"30 custom posts + captions + scheduling",color:"#f87171"},
 ];
-let cart=[];
-const shopList=document.getElementById('shopList');
-SHOP.forEach(item=>{
-  const el=document.createElement('div');el.className='shop-card';
-  el.style.border=`1px solid ${item.color}30`;
-  el.innerHTML=`<div class="shop-tag" style="background:${item.color}">${item.tag}</div><div class="shop-icon">${item.icon}</div><div class="shop-title">${item.title}</div><div class="shop-desc">${item.desc}</div><div class="shop-footer"><div class="shop-price" style="color:${item.color}">R${item.price.toLocaleString()}</div><button class="add-btn" style="background:${item.color}" onclick="addToCart('${item.title}',${item.price},'${item.icon}')">Add to Cart</button></div>`;
-  shopList.appendChild(el);
-});
-function addToCart(title,price,icon){
-  cart.push({title,price,icon});updateCart();showToast(`${icon} ${title} added!`);
-}
-function updateCart(){
-  const total=cart.reduce((a,c)=>a+c.price,0),count=cart.length;
-  document.getElementById('cartCount').textContent=count;
-  document.getElementById('cartCount').style.display=count?'flex':'none';
-  const sb=document.getElementById('sideCartBadge');
-  if(sb){sb.textContent=count;sb.style.display=count?'inline-flex':'none';}
-  document.getElementById('cartNum').textContent=count;
-  document.getElementById('cartTotal').textContent=total.toLocaleString();
-  document.getElementById('cartItems').innerHTML=cart.map(c=>`<div class="cart-item">${c.icon} ${c.title} — R${c.price.toLocaleString()}</div>`).join('');
-  document.getElementById('cartSummary').style.display=count?'block':'none';
-  document.getElementById('checkoutBtn').href=`https://wa.me/27744815163?text=Hi%21%20I%27d%20like%20to%20order%3A%20${encodeURIComponent(cart.map(c=>c.title).join(', '))}%20%E2%80%94%20Total%3A%20R${total.toLocaleString()}`;
+function Shop({addXP}){
+  const [cart,setCart]=useState([]),[toast,setToast]=useState("");
+  function add(item){setCart(c=>[...c,item]);setToast(`${item.icon} Added!`);addXP(10,"🛒 +10 XP!");setTimeout(()=>setToast(""),2000);}
+  const total=cart.reduce((a,c)=>a+c.price,0);
+  return <div style={{padding:"24px 16px"}}>
+    {toast&&<div style={{position:"fixed",top:68,left:"50%",transform:"translateX(-50%)",background:"#34d399",color:"#0a0a0b",padding:"10px 20px",borderRadius:100,fontWeight:700,fontSize:13,zIndex:999,whiteSpace:"nowrap"}}>✓ {toast}</div>}
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}><BHLogo size={34}/><div><div style={{fontSize:18,fontWeight:900}}>Shop</div><div style={{color:"#7a7a78",fontSize:12}}>+10 XP per item added</div></div></div>
+      <div style={{position:"relative",background:"#111114",border:"1px solid #ffffff15",borderRadius:10,padding:"7px 12px",fontSize:18}}>
+        🛒{cart.length>0&&<span style={{position:"absolute",top:-5,right:-5,background:"#f87171",color:"#fff",borderRadius:"50%",width:18,height:18,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800}}>{cart.length}</span>}
+      </div>
+    </div>
+    <div style={{display:"flex",flexDirection:"column",gap:14}}>
+      {SI.map(item=>(
+        <div key={item.id} style={{background:"#111114",border:`1px solid ${item.color}30`,borderRadius:16,padding:18,position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,right:0,background:item.color,color:"#0a0a0b",fontSize:11,fontWeight:800,padding:"4px 12px",borderRadius:"0 16px 0 10px"}}>{item.tag}</div>
+          <div style={{fontSize:28,marginBottom:8}}>{item.icon}</div>
+          <div style={{fontWeight:800,fontSize:16,marginBottom:4}}>{item.title}</div>
+          <div style={{fontSize:13,color:"#7a7a78",marginBottom:14}}>{item.desc}</div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{fontSize:22,fontWeight:900,color:item.color}}>R{item.price.toLocaleString()}</div>
+            <button onClick={()=>add(item)} style={{background:item.color,color:"#0a0a0b",border:"none",borderRadius:10,padding:"9px 16px",fontWeight:800,fontSize:13}}>Add to Cart</button>
+          </div>
+        </div>
+      ))}
+    </div>
+    {cart.length>0&&<div style={{marginTop:16,background:`${A}12`,border:`1px solid ${A}35`,borderRadius:14,padding:16}}>
+      <div style={{fontWeight:800,marginBottom:8}}>🛒 Cart ({cart.length} items)</div>
+      {cart.map((c,i)=><div key={i} style={{fontSize:13,color:"#9a9a98",marginBottom:4}}>{c.icon} {c.title} — R{c.price.toLocaleString()}</div>)}
+      <div style={{fontWeight:800,fontSize:15,color:A,margin:"10px 0 12px"}}>Total: R{total.toLocaleString()}</div>
+      <a href={`https://wa.me/27744815163?text=Hi! I'd like to order: ${cart.map(c=>c.title).join(", ")} — Total: R${total.toLocaleString()}`} target="_blank"
+        style={{display:"block",background:"#25D366",color:"#fff",textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14}}>
+        💬 Checkout via WhatsApp →
+      </a>
+    </div>}
+  </div>
 }
 
-// ── HUSTLE QUIZ ──
-const QUESTIONS=[
-  {q:'How many hours do you work on your business per week?',opts:['0–5 hrs','6–15 hrs','16–30 hrs','30+ hrs'],scores:[5,15,25,40]},
-  {q:'Do you have a website or online presence?',opts:['Not yet','Social only','Website (basic)','Full digital presence'],scores:[0,10,20,30]},
-  {q:'How do you find new customers?',opts:['Word of mouth only','Some social posting','Consistent marketing','Paid + organic strategy'],scores:[5,10,20,30]},
+/* ── CONTACT ── */
+function Contact({addXP,addLead}){
+  const [sent,setSent]=useState(false),[form,setForm]=useState({name:"",email:"",msg:""});
+  function submit(){
+    if(!form.name||!form.email||!form.msg)return;
+    addLead(form.name,form.email);addXP(50,"🎯 +50 XP for reaching out!");setSent(true);
+  }
+  if(sent) return <div style={{padding:"60px 20px",textAlign:"center"}}>
+    <BHLogo size={56}/><div style={{fontSize:48,margin:"16px 0 10px"}}>🎉</div>
+    <div style={{fontSize:22,fontWeight:900,marginBottom:10}}>Message sent!</div>
+    <div style={{color:"#7a7a78",marginBottom:24,fontSize:14}}>We'll respond within 2 hours. You earned 50 XP! ⚡</div>
+    <button onClick={()=>{setSent(false);setForm({name:"",email:"",msg:""});}} style={{background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:"12px 24px",fontWeight:800,fontSize:14}}>Send another →</button>
+  </div>
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>Get in Touch</div><div style={{color:"#7a7a78",fontSize:12}}>Earn 50 XP for messaging us</div></div></div>
+    {[
+      {icon:"💬",title:"WhatsApp (Fastest)",sub:"+27 74 481 5163",bg:"rgba(37,211,102,.1)",bc:"rgba(37,211,102,.3)",tc:"#25D366",href:"https://wa.me/27744815163"},
+      {icon:"🌐",title:"Visit Website",sub:"www.businesshustle.co.za",bg:`${A}10`,bc:`${A}25`,tc:A,href:"https://www.businesshustle.co.za"},
+      {icon:"📚",title:"Resource Page",sub:"businesshustle.co.za/get-started",bg:"rgba(52,211,153,.1)",bc:"rgba(52,211,153,.25)",tc:"#34d399",href:"https://www.businesshustle.co.za/get-started"},
+    ].map(c=>(
+      <a key={c.title} href={c.href} target="_blank" onClick={()=>addXP(5,"✨ +5 XP!")} style={{display:"flex",alignItems:"center",gap:14,background:c.bg,border:`1px solid ${c.bc}`,borderRadius:16,padding:"14px 18px",marginBottom:10}}>
+        <span style={{fontSize:26}}>{c.icon}</span>
+        <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:c.tc}}>{c.title}</div><div style={{fontSize:12,color:"#7a7a78"}}>{c.sub}</div></div>
+        <span style={{color:c.tc,fontSize:18}}>→</span>
+      </a>
+    ))}
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:18}}>
+      <div style={{fontWeight:700,fontSize:14,marginBottom:14}}>Send a message · +50 XP</div>
+      {["name","email"].map(f=><input key={f} placeholder={f==="name"?"Your name":"Email address"} value={form[f]} onChange={e=>setForm(p=>({...p,[f]:e.target.value}))}
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:13,marginBottom:10,outline:"none",boxSizing:"border-box"}}/>)}
+      <textarea placeholder="Tell us about your project…" value={form.msg} onChange={e=>setForm(p=>({...p,msg:e.target.value}))} rows={3}
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:13,marginBottom:14,outline:"none",resize:"none",boxSizing:"border-box"}}/>
+      <button onClick={submit} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>Send Message →</button>
+    </div>
+  </div>
+}
+
+/* ── AI CHAT ── */
+function AIChat({onClose,addXP}){
+  const [msgs,setMsgs]=useState([{r:"bot",t:"Hey! 👋 I'm your BH AI advisor. Ask me anything about growing your business, pricing, or strategy!"}]);
+  const [inp,setInp]=useState(""),[loading,setLoading]=useState(false);
+  const history=useRef([]),bottom=useRef(null);
+  useEffect(()=>{bottom.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
+  async function send(){
+    if(!inp.trim()||loading)return;
+    const txt=inp.trim();setInp("");
+    setMsgs(m=>[...m,{r:"user",t:txt}]);
+    history.current.push({role:"user",content:txt});
+    setLoading(true);addXP(15,"💬 +15 XP!");
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,system:"You are an energetic business advisor for Business Hustle SA (businesshustle.co.za). Keep answers to 2-3 sentences max. Be punchy and practical. Use emojis sparingly. Always end with one actionable next step.",messages:history.current})});
+      const d=await res.json();
+      const reply=d.content?.[0]?.text||"Try again!";
+      history.current.push({role:"assistant",content:reply});
+      setMsgs(m=>[...m,{r:"bot",t:reply}]);
+    }catch{setMsgs(m=>[...m,{r:"bot",t:"Connection hiccup! Try again 💪"}]);}
+    setLoading(false);
+  }
+  return <div style={{position:"fixed",bottom:80,left:10,right:10,maxWidth:400,margin:"0 auto",background:"#111114",border:`1px solid ${A}40`,borderRadius:20,boxShadow:"0 20px 60px #000c",zIndex:999,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+    <div style={{background:A,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}><BHLogo size={30}/><div><div style={{fontWeight:900,color:"#0a0a0b",fontSize:14}}>BH AI Advisor</div><div style={{fontSize:11,color:"rgba(10,10,11,.6)"}}>+15 XP per question</div></div></div>
+      <button onClick={onClose} style={{background:"none",border:"none",fontSize:18,color:"rgba(10,10,11,.6)"}}>✕</button>
+    </div>
+    <div style={{overflowY:"auto",padding:14,display:"flex",flexDirection:"column",gap:10,maxHeight:260}}>
+      {msgs.map((m,i)=>(
+        <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
+          <div style={{background:m.r==="user"?A:"#1e1e22",color:m.r==="user"?"#0a0a0b":"#e8e8e6",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",maxWidth:"82%",fontSize:13,lineHeight:1.55}}>{m.t}</div>
+        </div>
+      ))}
+      {loading&&<div style={{display:"flex",gap:5,padding:"10px 14px",background:"#1e1e22",borderRadius:"16px 16px 16px 4px",width:"fit-content"}}>
+        {[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:A,animation:`bounce 1s ${i*.2}s infinite`}}/>)}
+      </div>}
+      <div ref={bottom}/>
+    </div>
+    <div style={{padding:"10px 12px",borderTop:"1px solid #ffffff10",display:"flex",gap:8}}>
+      <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Ask anything…"
+        style={{flex:1,background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"9px 12px",color:"#e8e8e6",fontSize:13,outline:"none"}}/>
+      <button onClick={send} disabled={loading} style={{background:A,border:"none",borderRadius:10,width:38,fontSize:16,fontWeight:800,color:"#0a0a0b"}}>→</button>
+    </div>
+  </div>
+}
+
+/* ── LEAD MODAL ── */
+function LeadModal({onClose,onSubmit}){
+  const [name,setName]=useState(""),[email,setEmail]=useState("");
+  return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:9998,display:"flex",alignItems:"flex-end"}}>
+    <div style={{background:"#111114",borderRadius:"20px 20px 0 0",padding:"28px 20px 36px",width:"100%",border:`1px solid ${A}40`}}>
+      <div style={{textAlign:"center",marginBottom:20}}>
+        <div style={{fontSize:36,marginBottom:10}}>🎁</div>
+        <div style={{fontWeight:900,fontSize:20,marginBottom:6}}>Free Business Toolkit</div>
+        <div style={{fontSize:13,color:"#7a7a78",lineHeight:1.6}}>Get our R2,000 starter kit — templates, checklists & strategy guide — completely free.</div>
+      </div>
+      <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:10,outline:"none",boxSizing:"border-box"}}/>
+      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email address" type="email"
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:14,outline:"none",boxSizing:"border-box"}}/>
+      <button onClick={()=>{if(name&&email)onSubmit(name,email);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:14,fontWeight:900,fontSize:15,marginBottom:10}}>Claim Free Toolkit →</button>
+      <button onClick={onClose} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13}}>No thanks</button>
+    </div>
+  </div>
+}
+
+/* ── APP ── */
+const NAV=[
+  {id:"home",icon:"🏠",label:"Home"},
+  {id:"plan",icon:"🧠",label:"AI Plan"},
+  {id:"challenges",icon:"⚡",label:"Daily XP"},
+  {id:"shop",icon:"🛒",label:"Shop"},
+  {id:"contact",icon:"💬",label:"Contact"},
 ];
-let qStep=0,qAnswers=[];
-function renderQuiz(){
-  const q=QUESTIONS[qStep];
-  document.getElementById('hustleQuiz').innerHTML=`<div class="quiz-card"><div class="progress-bar">${QUESTIONS.map((_,i)=>`<div class="prog-seg ${i<=qStep?'done':''}"></div>`).join('')}</div><div class="q-num">Question ${qStep+1} of ${QUESTIONS.length}</div><div class="q-text">${q.q}</div><div class="q-options">${q.opts.map((o,i)=>`<button class="q-opt" onclick="pickAnswer(${q.scores[i]})">${o}</button>`).join('')}</div></div>`;
-}
-function pickAnswer(score){
-  qAnswers.push(score);
-  if(qStep<QUESTIONS.length-1){qStep++;renderQuiz();}else{showResult();}
-}
-function showResult(){
-  const total=qAnswers.reduce((a,b)=>a+b,0),max=QUESTIONS.reduce((a,q)=>a+Math.max(...q.scores),0),pct=Math.round((total/max)*100);
-  const [emoji,label,msg,color]=pct<30?['🌱','Seedling','You\'re just getting started — let\'s plant the right seeds.','#34d399']:pct<60?['🔥','Side Hustler','You\'ve got momentum. Time to turn up the heat!','#fb923c']:pct<85?['⚡','Grind Mode','You\'re serious. Let\'s take you to the next level!','#F5C518']:['👑','Full Hustle','You\'re an absolute machine. Let\'s scale this empire.','#a78bfa'];
-  document.getElementById('hustleQuiz').style.display='none';
-  const res=document.getElementById('hustleResult');res.style.display='block';
-  res.innerHTML=`<div class="result-emoji">${emoji}</div><div class="result-score" style="color:${color}">${pct}% Hustle</div><div class="result-label">${label}</div><div class="result-msg">${msg}</div><div class="result-bar-wrap"><div class="result-bar" style="width:${pct}%;background:linear-gradient(90deg,${color},#F5C518)"></div></div><div class="result-btns"><a href="https://www.businesshustle.co.za/get-started" target="_blank" class="result-btn-primary">🚀 Get the full playbook →</a><a href="https://wa.me/27744815163" target="_blank" class="result-btn-wa">💬 Talk to an Expert</a><button class="result-btn-ghost" onclick="resetQuiz()">Retake Quiz</button></div>`;
-}
-function resetQuiz(){qStep=0;qAnswers=[];document.getElementById('hustleResult').style.display='none';document.getElementById('hustleQuiz').style.display='block';renderQuiz();}
-renderQuiz();
 
-// ── CONTACT ──
-function submitForm(){
-  const n=document.getElementById('fname').value,e=document.getElementById('femail').value,m=document.getElementById('fmsg').value;
-  if(!n||!e||!m){showToast('Please fill in all fields');return;}
-  document.getElementById('contactMain').style.display='none';
-  document.getElementById('contactSuccess').style.display='block';
+function App(){
+  const [page,setPage]=useState("home");
+  const [chatOpen,setChatOpen]=useState(false);
+  const [xp,setXP]=useState(()=>load("bh_xp",0));
+  const [streak]=useState(()=>load("bh_streak",1));
+  const [leads,setLeads]=useState(()=>load("bh_leads",[]));
+  const [toast,setToast]=useState(null);
+  const [showLead,setShowLead]=useState(false);
+  const visited=useRef(new Set());
+
+  useEffect(()=>{
+    const t=setTimeout(()=>{
+      if(!load("bh_modal",false)){setShowLead(true);save("bh_modal",true);}
+    },25000);
+    return()=>clearTimeout(t);
+  },[]);
+
+  function addXP(amt,msg){
+    setXP(prev=>{const n=prev+amt;save("bh_xp",n);return n;});
+    if(msg)setToast(msg);
+  }
+  function addLead(name,email){
+    const time=new Date().toLocaleTimeString("en-ZA",{hour:"2-digit",minute:"2-digit"});
+    const n=[...leads,{name,email,time}];
+    setLeads(n);save("bh_leads",n);
+  }
+  function go(id){
+    setPage(id);
+    if(!visited.current.has(id)){visited.current.add(id);addXP(5,"✨ +5 XP for exploring!");}
+  }
+
+  const badge=getBadge(xp);
+  const pages={
+    home:<Home setPage={go} xp={xp} streak={streak} addXP={addXP} leads={leads}/>,
+    plan:<AIPlan addXP={addXP}/>,
+    challenges:<Challenges addXP={addXP} setPage={go}/>,
+    shop:<Shop addXP={addXP}/>,
+    hustle:<HustleQuiz addXP={addXP} setPage={go}/>,
+    contact:<Contact addXP={addXP} addLead={addLead}/>,
+    dashboard:<Dashboard leads={leads} xp={xp} streak={streak}/>,
+  };
+
+  return <div style={{background:"#0a0a0b",color:"#e8e8e6",minHeight:"100vh",maxWidth:430,margin:"0 auto",display:"flex",flexDirection:"column"}}>
+    {toast&&<XPToast msg={toast} onDone={()=>setToast(null)}/>}
+    {showLead&&<LeadModal onClose={()=>setShowLead(false)} onSubmit={(n,e)=>{addLead(n,e);addXP(75,"🎁 +75 XP for claiming toolkit!");setShowLead(false);}}/>}
+
+    <div style={{position:"sticky",top:0,zIndex:50,background:"rgba(10,10,11,.95)",backdropFilter:"blur(20px)",borderBottom:"1px solid #ffffff0d",padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <BHLogo size={32}/>
+        <div><div style={{fontWeight:900,fontSize:14,lineHeight:1.2}}>Business <span style={{color:A}}>Hustle</span></div><div style={{fontSize:9,color:"#7a7a78"}}>businesshustle.co.za</div></div>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <button onClick={()=>go("dashboard")} style={{background:"#111114",border:"1px solid #ffffff15",borderRadius:10,padding:"6px 12px",color:A,fontWeight:800,fontSize:12}}>
+          {badge.icon} {xp} XP
+        </button>
+        <button onClick={()=>setChatOpen(o=>!o)} style={{background:chatOpen?A:"#111114",border:`1px solid ${chatOpen?A:"#ffffff20"}`,borderRadius:10,padding:"6px 10px",color:chatOpen?"#0a0a0b":"#e8e8e6",fontWeight:700,fontSize:12}}>
+          🤖 AI
+        </button>
+      </div>
+    </div>
+
+    <div style={{flex:1,overflowY:"auto",paddingBottom:80}}>{pages[page]||pages.home}</div>
+
+    <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(10,10,11,.97)",backdropFilter:"blur(20px)",borderTop:"1px solid #ffffff0d",display:"flex",zIndex:50}}>
+      {NAV.map(n=>(
+        <button key={n.id} onClick={()=>go(n.id)} style={{flex:1,background:"none",border:"none",color:page===n.id?A:"#7a7a78",padding:"9px 4px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+          <span style={{fontSize:18,filter:page===n.id?`drop-shadow(0 0 8px ${A})`:"none"}}>{n.icon}</span>
+          <span style={{fontSize:9,fontWeight:page===n.id?800:600}}>{n.label}</span>
+        </button>
+      ))}
+    </div>
+
+    {chatOpen&&<AIChat onClose={()=>setChatOpen(false)} addXP={addXP}/>}
+  </div>
 }
 
-// ── TOAST ──
-function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
-
-// ── AI CHAT ──
-let chatOpen=false;const chatMsgs=[];
-function toggleChat(){chatOpen=!chatOpen;document.getElementById('chatWrap').style.display=chatOpen?'flex':'none';document.getElementById('aiBtn').classList.toggle('active',chatOpen);}
-async function sendChat(){
-  const inp=document.getElementById('chatInput'),text=inp.value.trim();if(!text)return;inp.value='';
-  addMsg('user',text);chatMsgs.push({role:'user',content:text});const typing=addTyping();
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are an energetic, friendly business advisor for Business Hustle — a South African digital startup agency at businesshustle.co.za. Keep responses punchy and practical. Max 3 sentences. Use emojis occasionally.',messages:chatMsgs})});
-    const d=await r.json();const reply=d.content?.[0]?.text||'Try again in a sec!';
-    chatMsgs.push({role:'assistant',content:reply});typing.remove();addMsg('bot',reply);
-  }catch{typing.remove();addMsg('bot','Connection hiccup! Try again 💪');}
-}
-function addMsg(role,text){const box=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+role;d.innerHTML=`<div class="msg-bubble">${text}</div>`;box.appendChild(d);box.scrollTop=box.scrollHeight;return d;}
-function addTyping(){const box=document.getElementById('chatMessages'),d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';box.appendChild(d);box.scrollTop=box.scrollHeight;return d;}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
