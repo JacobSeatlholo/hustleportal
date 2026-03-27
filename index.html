@@ -12,7 +12,7 @@
 body{background:#0a0a0b;color:#e8e8e6;font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;max-width:430px;margin:0 auto;min-height:100vh}
 a{text-decoration:none}
 button{font-family:inherit;cursor:pointer}
-input,textarea{font-family:inherit}
+input,textarea,select{font-family:inherit}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -29,6 +29,7 @@ const A="#F5C518";
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
 
+/* ── LOGO ── */
 function BHLogo({size=34}){
   return <div style={{width:size,height:size,background:A,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
     <svg width={size*.75} height={size*.75} viewBox="0 0 52 52">
@@ -38,31 +39,83 @@ function BHLogo({size=34}){
   </div>
 }
 
+/* ── XP TOAST ── */
 function XPToast({msg,onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2400);return()=>clearTimeout(t);},[]);
   return <div style={{position:"fixed",top:68,left:"50%",transform:"translateX(-50%)",background:A,color:"#0a0a0b",padding:"10px 20px",borderRadius:100,fontWeight:800,fontSize:13,zIndex:9999,whiteSpace:"nowrap",animation:"slideDown .3s ease"}}>{msg}</div>
 }
 
-const BADGES=[
-  {min:0,icon:"🌱",label:"Seedling",color:"#34d399"},
-  {min:100,icon:"🔥",label:"Side Hustler",color:"#fb923c"},
-  {min:300,icon:"⚡",label:"Grind Mode",color:A},
-  {min:600,icon:"💎",label:"Power Player",color:"#60a5fa"},
-  {min:1000,icon:"👑",label:"Full Hustle",color:"#a78bfa"},
-];
-function getBadge(xp){return[...BADGES].reverse().find(b=>xp>=b.min)||BADGES[0];}
-function getNext(xp){return BADGES.find(b=>b.min>xp)||null;}
+/* ── LEAD MODAL ── */
+function LeadModal({onClose,onSubmit}){
+  const [name,setName]=useState(""),[email,setEmail]=useState("");
+  return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:9998,display:"flex",alignItems:"flex-end"}}>
+    <div style={{background:"#111114",borderRadius:"20px 20px 0 0",padding:"28px 20px 36px",width:"100%",border:`1px solid ${A}40`}}>
+      <div style={{textAlign:"center",marginBottom:20}}>
+        <div style={{fontSize:36,marginBottom:10}}>🎁</div>
+        <div style={{fontWeight:900,fontSize:20,marginBottom:6}}>Free Business Toolkit</div>
+        <div style={{fontSize:13,color:"#7a7a78",lineHeight:1.6}}>Get our R2,000 starter kit — templates, checklists & strategy guide — completely free.</div>
+      </div>
+      <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name" style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:10,outline:"none",boxSizing:"border-box"}}/>
+      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email address" type="email" style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:14,outline:"none",boxSizing:"border-box"}}/>
+      <button onClick={()=>{if(name&&email)onSubmit(name,email);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:14,fontWeight:900,fontSize:15,marginBottom:10}}>Claim Free Toolkit →</button>
+      <button onClick={onClose} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13}}>No thanks</button>
+    </div>
+  </div>
+}
+
+/* ── AI CHAT ── */
+function AIChat({onClose,addXP}){
+  const [msgs,setMsgs]=useState([{r:"bot",t:"Hey! 👋 I'm your BH AI advisor. Ask me anything about growing your business, pricing, or strategy!"}]);
+  const [inp,setInp]=useState(""),[loading,setLoading]=useState(false);
+  const history=useRef([]),bottom=useRef(null);
+  useEffect(()=>{bottom.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
+  async function send(){
+    if(!inp.trim()||loading)return;
+    const txt=inp.trim();setInp("");
+    setMsgs(m=>[...m,{r:"user",t:txt}]);
+    history.current.push({role:"user",content:txt});
+    setLoading(true);addXP(15,"💬 +15 XP!");
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,system:"You are an energetic business advisor for Business Hustle SA (businesshustle.co.za). Keep answers to 2-3 sentences max. Be punchy and practical. Use emojis sparingly. Always end with one actionable next step.",messages:history.current})});
+      const d=await res.json();
+      const reply=d.content?.[0]?.text||"Try again!";
+      history.current.push({role:"assistant",content:reply});
+      setMsgs(m=>[...m,{r:"bot",t:reply}]);
+    }catch{setMsgs(m=>[...m,{r:"bot",t:"Connection hiccup! Try again 💪"}]);}
+    setLoading(false);
+  }
+  return <div style={{position:"fixed",bottom:80,left:10,right:10,maxWidth:400,margin:"0 auto",background:"#111114",border:`1px solid ${A}40`,borderRadius:20,boxShadow:"0 20px 60px #000c",zIndex:999,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+    <div style={{background:A,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}><BHLogo size={30}/><div><div style={{fontWeight:900,color:"#0a0a0b",fontSize:14}}>BH AI Advisor</div><div style={{fontSize:11,color:"rgba(10,10,11,.6)"}}>+15 XP per question</div></div></div>
+      <button onClick={onClose} style={{background:"none",border:"none",fontSize:18,color:"rgba(10,10,11,.6)"}}>✕</button>
+    </div>
+    <div style={{overflowY:"auto",padding:14,display:"flex",flexDirection:"column",gap:10,maxHeight:260}}>
+      {msgs.map((m,i)=>(
+        <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
+          <div style={{background:m.r==="user"?A:"#1e1e22",color:m.r==="user"?"#0a0a0b":"#e8e8e6",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",maxWidth:"82%",fontSize:13,lineHeight:1.55}}>{m.t}</div>
+        </div>
+      ))}
+      {loading&&<div style={{display:"flex",gap:5,padding:"10px 14px",background:"#1e1e22",borderRadius:"16px 16px 16px 4px",width:"fit-content"}}>
+        {[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:A,animation:`bounce 1s ${i*.2}s infinite`}}/>)}
+      </div>}
+      <div ref={bottom}/>
+    </div>
+    <div style={{padding:"10px 12px",borderTop:"1px solid #ffffff10",display:"flex",gap:8}}>
+      <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Ask anything…" style={{flex:1,background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"9px 12px",color:"#e8e8e6",fontSize:13,outline:"none"}}/>
+      <button onClick={send} disabled={loading} style={{background:A,border:"none",borderRadius:10,width:38,fontSize:16,fontWeight:800,color:"#0a0a0b"}}>→</button>
+    </div>
+  </div>
+}
 
 /* ── HOME ── */
-function Home({setPage,xp,streak,addXP,leads}){
-  const badge=getBadge(xp),next=getNext(xp);
-  const prog=next?Math.round(((xp-badge.min)/(next.min-badge.min))*100):100;
+function Home({setPage,addXP}){
   const tags=["Explore. Adapt. Evolve.","Build. Launch. Scale.","Less friction. More revenue."];
   const [ti,setTi]=useState(0),[disp,setDisp]=useState(""),[done,setDone]=useState(false);
   useEffect(()=>{setDisp("");setDone(false);let i=0;const t=setInterval(()=>{i++;setDisp(tags[ti].slice(0,i));if(i>=tags[ti].length){setDone(true);clearInterval(t);}},45);return()=>clearInterval(t);},[ti]);
   useEffect(()=>{if(done){const t=setTimeout(()=>setTi(i=>(i+1)%tags.length),1800);return()=>clearTimeout(t);}},[done]);
 
   return <div style={{paddingBottom:40}}>
+    {/* HERO */}
     <div style={{textAlign:"center",padding:"28px 20px 20px",position:"relative"}}>
       <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse at 50% 0%,${A}20 0%,transparent 65%)`,pointerEvents:"none"}}/>
       <div style={{width:72,height:72,background:A,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",boxShadow:`0 0 32px ${A}50`}}>
@@ -80,22 +133,14 @@ function Home({setPage,xp,streak,addXP,leads}){
       </div>
     </div>
 
-    <div style={{margin:"0 16px 16px",background:"#111114",border:`1px solid ${badge.color}40`,borderRadius:16,padding:16}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <span style={{fontSize:28}}>{badge.icon}</span>
-          <div><div style={{fontWeight:800,fontSize:15,color:badge.color}}>{badge.label}</div><div style={{fontSize:11,color:"#7a7a78"}}>{xp} XP total</div></div>
-        </div>
-        <div style={{textAlign:"right"}}>
-          <div style={{fontSize:11,color:"#7a7a78",marginBottom:4}}>🔥 {streak} day streak</div>
-          {next&&<div style={{fontSize:11,color:"#7a7a78"}}>{next.min-xp} XP to {next.icon}</div>}
-        </div>
-      </div>
-      <div style={{background:"#ffffff10",borderRadius:100,height:6,overflow:"hidden"}}>
-        <div style={{height:"100%",width:`${prog}%`,background:`linear-gradient(90deg,${badge.color},${A})`,borderRadius:100,transition:"width .5s ease"}}/>
-      </div>
-    </div>
+    {/* GET STARTED BANNER */}
+    <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"flex",alignItems:"center",gap:14,background:`linear-gradient(120deg,${A}20,#a78bfa18)`,border:`1px solid ${A}40`,borderRadius:16,padding:"16px 18px",margin:"0 16px 16px"}}>
+      <span style={{fontSize:32}}>🚀</span>
+      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:15,color:"#e8e8e6"}}>Ready to grow your business?</div><div style={{fontSize:12,color:"#7a7a78",marginTop:2}}>businesshustle.co.za/get-started</div></div>
+      <span style={{color:A,fontSize:18,fontWeight:900}}>→</span>
+    </a>
 
+    {/* STATS */}
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,padding:"0 16px 16px"}}>
       {[["500+","Founders"],["12+","Services"],["4.9★","Rating"]].map(([n,l])=>(
         <div key={l} style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:"12px 6px",textAlign:"center"}}>
@@ -105,50 +150,135 @@ function Home({setPage,xp,streak,addXP,leads}){
       ))}
     </div>
 
+    {/* QUICK ACTIONS — now 6 tiles including AI Plan + Daily Challenges */}
     <div style={{padding:"0 16px 16px"}}>
       <div style={{fontWeight:800,fontSize:14,marginBottom:10}}>Quick Actions</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         <a href="https://wa.me/27744815163" target="_blank" onClick={()=>addXP(10,"💬 +10 XP!")} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(37,211,102,.1)",border:"1px solid rgba(37,211,102,.3)",borderRadius:14,padding:14}}>
           <span style={{fontSize:22}}>💬</span><span style={{fontWeight:700,fontSize:13,color:"#25D366"}}>WhatsApp</span><span style={{fontSize:11,color:"#7a7a78"}}>+27 74 481 5163</span>
         </a>
-        <a href="https://www.businesshustle.co.za" target="_blank" onClick={()=>addXP(10,"🌐 +10 XP!")} style={{display:"flex",flexDirection:"column",gap:5,background:`${A}12`,border:`1px solid ${A}30`,borderRadius:14,padding:14}}>
-          <span style={{fontSize:22}}>🌐</span><span style={{fontWeight:700,fontSize:13,color:A}}>Website</span><span style={{fontSize:11,color:"#7a7a78"}}>businesshustle.co.za</span>
-        </a>
-        <button onClick={()=>{setPage("plan");addXP(5,"🧠 +5 XP!");}} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(167,139,250,.1)",border:"1px solid rgba(167,139,250,.3)",borderRadius:14,padding:14,textAlign:"left"}}>
-          <span style={{fontSize:22}}>🧠</span><span style={{fontWeight:700,fontSize:13,color:"#a78bfa"}}>AI Plan</span><span style={{fontSize:11,color:"#7a7a78"}}>Generate business plan</span>
-        </button>
         <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.3)",borderRadius:14,padding:14}}>
           <span style={{fontSize:22}}>📚</span><span style={{fontWeight:700,fontSize:13,color:"#34d399"}}>Resources</span><span style={{fontSize:11,color:"#7a7a78"}}>Get Started guide</span>
         </a>
+        {/* NEW: AI Plan */}
+        <button onClick={()=>{setPage("plan");addXP(5,"🧠 +5 XP!");}} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(167,139,250,.1)",border:"1px solid rgba(167,139,250,.3)",borderRadius:14,padding:14,textAlign:"left"}}>
+          <span style={{fontSize:22}}>🧠</span><span style={{fontWeight:700,fontSize:13,color:"#a78bfa"}}>AI Business Plan</span><span style={{fontSize:11,color:"#7a7a78"}}>Generate in 60 seconds</span>
+        </button>
+        {/* NEW: Daily Challenges */}
+        <button onClick={()=>setPage("challenges")} style={{display:"flex",flexDirection:"column",gap:5,background:`${A}12`,border:`1px solid ${A}30`,borderRadius:14,padding:14,textAlign:"left"}}>
+          <span style={{fontSize:22}}>⚡</span><span style={{fontWeight:700,fontSize:13,color:A}}>Daily Challenges</span><span style={{fontSize:11,color:"#7a7a78"}}>Earn XP. Level up.</span>
+        </button>
+        <button onClick={()=>setPage("shop")} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(167,139,250,.1)",border:"1px solid rgba(167,139,250,.3)",borderRadius:14,padding:14,textAlign:"left"}}>
+          <span style={{fontSize:22}}>🛒</span><span style={{fontWeight:700,fontSize:13,color:"#a78bfa"}}>Shop</span><span style={{fontSize:11,color:"#7a7a78"}}>Starter packages</span>
+        </button>
+        {/* NEW: Africa AI Policy */}
+        <button onClick={()=>setPage("aipolicy")} style={{display:"flex",flexDirection:"column",gap:5,background:"rgba(96,165,250,.1)",border:"1px solid rgba(96,165,250,.3)",borderRadius:14,padding:14,textAlign:"left"}}>
+          <span style={{fontSize:22}}>🌍</span><span style={{fontWeight:700,fontSize:13,color:"#60a5fa"}}>Africa AI Policy</span><span style={{fontSize:11,color:"#7a7a78"}}>Research resources</span>
+        </button>
       </div>
     </div>
 
-    <div style={{margin:"0 16px 12px"}}>
-      <button onClick={()=>setPage("challenges")} style={{width:"100%",background:"linear-gradient(120deg,#1a1200,#111114)",border:`1px solid ${A}50`,borderRadius:16,padding:16,textAlign:"left",display:"flex",alignItems:"center",gap:14}}>
-        <span style={{fontSize:32}}>⚡</span>
-        <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:A}}>Daily Hustle Challenges</div><div style={{fontSize:12,color:"#7a7a78",marginTop:2}}>Complete tasks. Earn XP. Level up.</div></div>
-        <span style={{color:A,fontWeight:900,fontSize:18}}>→</span>
-      </button>
+    {/* SERVICES */}
+    <div style={{padding:"0 16px 16px"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+        <div style={{fontWeight:800,fontSize:14}}>Our Services</div>
+        <button onClick={()=>setPage("services")} style={{background:"none",border:"none",color:A,fontWeight:700,fontSize:12}}>See all →</button>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
+        {[["🎯","Brand Strategy","Position yourself to win","#F5C518"],["💻","Web Development","Sites that convert","#a78bfa"],["📈","Digital Marketing","Grow fast, grow smart","#34d399"],["📸","Content Creation","Stories that stick","#f87171"]].map(([icon,title,desc,col])=>(
+          <div key={title} style={{background:"#111114",border:`1px solid ${col}15`,borderRadius:14,padding:"14px 12px",cursor:"pointer",transition:"border-color .2s"}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=col+"50"} onMouseLeave={e=>e.currentTarget.style.borderColor=col+"15"}>
+            <div style={{fontSize:22,marginBottom:8}}>{icon}</div>
+            <div style={{fontWeight:700,fontSize:13,color:"#e8e8e6",marginBottom:3}}>{title}</div>
+            <div style={{fontSize:11,color:"#7a7a78"}}>{desc}</div>
+          </div>
+        ))}
+      </div>
     </div>
 
-    <div style={{margin:"0 16px"}}>
-      <button onClick={()=>setPage("dashboard")} style={{width:"100%",background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:16,textAlign:"left",display:"flex",alignItems:"center",gap:14}}>
-        <span style={{fontSize:32}}>📊</span>
-        <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:"#60a5fa"}}>Analytics Dashboard</div><div style={{fontSize:12,color:"#7a7a78",marginTop:2}}>{leads.length} leads captured</div></div>
-        <span style={{color:"#60a5fa",fontWeight:900,fontSize:18}}>→</span>
-      </button>
+    {/* QUOTE */}
+    <div style={{margin:"0 16px",background:`${A}10`,border:`1px solid ${A}25`,borderRadius:16,padding:18}}>
+      <p style={{fontStyle:"italic",fontSize:14,color:"#e8e8e6",lineHeight:1.6,margin:"0 0 8px"}}>"Think of technology as a verb, not a noun. It provides the tools — creative people provide the imagination."</p>
+      <div style={{fontSize:11,color:"#7a7a78"}}>— Red Burns</div>
     </div>
   </div>
 }
 
-/* ── CHALLENGES ── */
+/* ── AI PLAN ── */
+const PQ=[
+  {q:"What is your business name and what does it do?",ph:"e.g. FlexFit SA — online personal training"},
+  {q:"Who is your target customer?",ph:"e.g. Working professionals aged 25–40 in SA cities"},
+  {q:"How will you make money?",ph:"e.g. Monthly subscriptions + coaching sessions"},
+  {q:"Who is your biggest competitor and how are you different?",ph:"e.g. Virgin Active, but 10x cheaper and remote"},
+  {q:"What is your goal for the next 6 months?",ph:"e.g. 100 paying customers and R50k monthly revenue"},
+];
+function AIPlan({addXP}){
+  const [step,setStep]=useState(0),[ans,setAns]=useState(Array(PQ.length).fill("")),[plan,setPlan]=useState(""),[loading,setLoading]=useState(false),[done,setDone]=useState(false);
+  async function generate(){
+    setLoading(true);
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,messages:[{role:"user",content:`Create a punchy, actionable 1-page business plan for a South African entrepreneur:
+Business: ${ans[0]}
+Customer: ${ans[1]}
+Revenue: ${ans[2]}
+Competition: ${ans[3]}
+6-Month Goal: ${ans[4]}
+
+Format with emoji headers:
+🎯 Mission Statement (1 sentence)
+👥 Target Market (2-3 bullets)
+💰 Revenue Streams (2-3 bullets)
+⚡ Competitive Advantage (2-3 bullets)
+📈 6-Month Milestones (4 specific milestones)
+🚀 First 3 Actions This Week
+
+Keep it energetic, South African, and practical.`}]})});
+      const d=await res.json();
+      setPlan(d.content?.[0]?.text||"Error generating. Please try again.");
+      setDone(true);addXP(100,"🧠 +100 XP for your business plan!");
+    }catch{setPlan("Connection error. Try again.");setDone(true);}
+    setLoading(false);
+  }
+  if(done)return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}><BHLogo size={36}/><div><div style={{fontSize:18,fontWeight:900}}>Your Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>AI-generated · Ready to share</div></div></div>
+    <div style={{background:"#111114",border:`1px solid ${A}30`,borderRadius:16,padding:18,marginBottom:16,maxHeight:420,overflowY:"auto"}}>
+      <pre style={{fontFamily:"inherit",fontSize:13,color:"#e8e8e6",lineHeight:1.85,whiteSpace:"pre-wrap",margin:0}}>{plan}</pre>
+    </div>
+    <a href={`https://wa.me/27744815163?text=Hi! I just used Business Hustle AI to create my business plan. Can we discuss next steps?`} target="_blank" style={{display:"block",background:"#25D366",color:"#fff",textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>💬 Discuss with a BH Expert →</a>
+    <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"block",background:`${A}15`,border:`1px solid ${A}40`,color:A,textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>📚 Get the Full Resource Guide →</a>
+    <button onClick={()=>{setStep(0);setAns(Array(PQ.length).fill(""));setPlan("");setDone(false);}} style={{width:"100%",background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>← Generate a New Plan</button>
+  </div>
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>AI Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>5 questions → full plan · Earn 100 XP</div></div></div>
+    <div style={{display:"flex",gap:5,marginBottom:20}}>{PQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15",transition:"background .3s"}}/>)}</div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
+      <div style={{fontSize:12,color:"#7a7a78",marginBottom:8}}>Question {step+1} of {PQ.length}</div>
+      <div style={{fontSize:16,fontWeight:700,marginBottom:16,lineHeight:1.5,color:"#e8e8e6"}}>{PQ[step].q}</div>
+      <textarea value={ans[step]} onChange={e=>{const a=[...ans];a[step]=e.target.value;setAns(a);}} placeholder={PQ[step].ph} rows={3}
+        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,outline:"none",resize:"none",boxSizing:"border-box",marginBottom:14}}/>
+      {step<PQ.length-1
+        ?<button onClick={()=>{if(ans[step].trim())setStep(s=>s+1);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>Next →</button>
+        :<button onClick={()=>{if(ans[step].trim())generate();}} disabled={loading} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15,opacity:loading?.7:1}}>{loading?"✨ Generating…":"🚀 Generate My Plan"}</button>
+      }
+      {step>0&&<button onClick={()=>setStep(s=>s-1)} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13,marginTop:10,padding:6}}>← Back</button>}
+    </div>
+    <div style={{marginTop:16,background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:16}}>
+      <div style={{fontSize:13,fontWeight:700,marginBottom:8}}>💡 What you'll get</div>
+      {["🎯 Clear mission statement","👥 Defined target market","💰 Revenue stream breakdown","📈 4 measurable milestones","🚀 3 actions to take this week"].map(i=>(
+        <div key={i} style={{fontSize:12,color:"#7a7a78",marginBottom:5}}>{i}</div>
+      ))}
+    </div>
+  </div>
+}
+
+/* ── DAILY CHALLENGES ── */
 const CHALLENGES=[
-  {id:"c1",icon:"💬",title:"Send a WhatsApp",desc:"Reach out to a potential client",xp:30,href:"https://wa.me/27744815163"},
+  {id:"c1",icon:"💬",title:"Send a WhatsApp",desc:"Reach out to a potential client today",xp:30,href:"https://wa.me/27744815163"},
   {id:"c2",icon:"🧠",title:"Generate a Business Plan",desc:"Use the AI planner to draft your strategy",xp:50,page:"plan"},
-  {id:"c3",icon:"🔥",title:"Complete Hustle Score",desc:"Find your hustle level",xp:40,page:"hustle"},
+  {id:"c3",icon:"🔥",title:"Complete Hustle Score",desc:"Find out your hustle level",xp:40,page:"hustle"},
   {id:"c4",icon:"📚",title:"Visit Resource Page",desc:"Read the Get Started guide",xp:20,href:"https://www.businesshustle.co.za/get-started"},
-  {id:"c5",icon:"🛒",title:"Browse the Shop",desc:"Check our starter packages",xp:15,page:"shop"},
-  {id:"c6",icon:"🌐",title:"Visit the Website",desc:"Explore businesshustle.co.za",xp:20,href:"https://www.businesshustle.co.za"},
+  {id:"c5",icon:"🛒",title:"Browse the Shop",desc:"Explore our starter packages",xp:15,page:"shop"},
+  {id:"c6",icon:"🌍",title:"Read Africa AI Policy",desc:"Explore AI governance in Africa",xp:25,page:"aipolicy"},
 ];
 function Challenges({addXP,setPage}){
   const [done,setDone]=useState(()=>load("bh_challenges",[]));
@@ -179,213 +309,148 @@ function Challenges({addXP,setPage}){
         </div>
       })}
     </div>
+    <div style={{marginTop:16,background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:16,textAlign:"center",fontSize:13,color:"#7a7a78"}}>Challenges reset daily. Keep your streak alive 🔥</div>
   </div>
 }
 
-/* ── AI BUSINESS PLAN ── */
-const PQ=[
-  {q:"What is your business name and what does it do?",ph:"e.g. FlexFit SA — an online personal training platform"},
-  {q:"Who is your target customer?",ph:"e.g. Working professionals aged 25–40 in SA cities"},
-  {q:"How will you make money?",ph:"e.g. Monthly subscriptions + one-on-one coaching sessions"},
-  {q:"Who is your biggest competitor and how are you different?",ph:"e.g. Virgin Active, but 10x cheaper and fully remote"},
-  {q:"What is your goal for the next 6 months?",ph:"e.g. 100 paying customers and R50k monthly revenue"},
+/* ── AFRICA AI POLICY RESOURCES ── */
+function AfricaAIPolicy(){
+  const sections=[
+    {title:"🔭 AI Governance & Regulation Trackers",items:[
+      {name:"African Observatory on Responsible AI",url:"https://www.globalcenter.ai/aorai/africa-policy-tool"},
+      {name:"ALT Advisory Data Protection Africa",url:"https://dataprotection.africa"},
+      {name:"Carnegie Africa Tech Policy Tracker",url:"https://carnegieendowment.org/features/africa-digital-regulations"},
+      {name:"ECDPM African AI and Data Policy Tracker",url:"https://ecdpm.org/work/interactive-tool-data-policies-african-countries"},
+      {name:"Tech Policy Intelligence Suite",url:"https://techpolicyadvisory.com/tracker"},
+    ]},
+    {title:"📜 Key Policy Documents",items:[
+      {name:"AU Continental AI Strategy",url:"https://au.int/en/documents/20240809/continental-artificial-intelligence-strategy"},
+      {name:"AU Malabo Convention on Cyber Security",url:"https://au.int/en/treaties/african-union-convention-cyber-security-and-personal-data-protection"},
+      {name:"AU Data Policy Framework",url:"https://au.int/en/documents/20220728/au-data-policy-framework"},
+      {name:"AfCFTA Digital Trade Protocol",url:"https://au.int/en/treaties/protocol-agreement-establishing-african-continental-free-trade-area-digital-trade"},
+      {name:"Africa Declaration on Artificial Intelligence",url:"https://c4ir.rw/docs/Africa-Declaration-on-Artificial-Intelligence.pdf"},
+      {name:"Nairobi Statement on AI — Eastern Africa",url:"https://unesdoc.unesco.org/ark:/48223/pf0000390381"},
+      {name:"Rabat Consensus on Artificial Intelligence",url:"https://unesdoc.unesco.org/ark:/48223/pf0000390399"},
+      {name:"Windhoek Statement on AI — Southern Africa",url:"https://unesdoc.unesco.org/ark:/48223/pf0000383197"},
+    ]},
+    {title:"🎓 University Research Centers",items:[
+      {name:"African Hub on AI Safety, Peace & Security — UCT",url:"https://ai.uct.ac.za/african-hub-ai-safety-peace-security"},
+      {name:"Responsible AI Lab (RAIL) — Kwame Nkrumah",url:"https://rail.knust.edu.gh/about-rail/"},
+      {name:"CIPIT — Strathmore University",url:"https://cipit.strathmore.edu/about/"},
+      {name:"MAK-AI — Makerere University",url:"https://air.ug/"},
+      {name:"AfriDSAI — University of Pretoria",url:"https://www.up.ac.za/afridsai"},
+      {name:"Tayarisha Initiative — Wits",url:"https://www.wits.ac.za/tayarisha/"},
+      {name:"Wits MIND Institute",url:"https://www.wits.ac.za/mind/"},
+      {name:"AIROL — University of Lagos",url:"https://airol.unilag.edu.ng/"},
+    ]},
+    {title:"📖 Key Publications",items:[
+      {name:"AI Diplomacy Guide for Africa",url:"https://www.tgov.org/post/ai-diplomacy-guide-for-africa-a-resource-to-shape-governance-and-dialogue"},
+      {name:"AI Governance in Africa (2022)",url:"https://ai.altadvisory.africa/wp-content/uploads/AI-Governance-in-Africa-2022.pdf"},
+      {name:"Case Studies of AI Policy Development in Africa",url:"https://www.cambridge.org/core/journals/data-and-policy/article/case-studies-of-ai-policy-development-in-africa/56593C560BCF498E0A6C424DA830D133"},
+      {name:"Decolonizing Global AI Governance",url:"https://royalsocietypublishing.org/rsos/article/11/8/231994/92616/Decolonizing-global-AI-governance-assessment-of"},
+      {name:"Responsible AI in Africa: Challenges and Opportunities",url:"https://link.springer.com/book/10.1007/978-3-031-08215-3"},
+      {name:"The State of AI in Africa: A Landscape Study",url:"https://www.globalcenter.ai/research/ai-in-africa-landscape-study"},
+      {name:"Trustworthy AI: African Perspectives",url:"https://link.springer.com/book/10.1007/978-3-031-75674-0"},
+      {name:"Understanding Africa's AI Governance Landscape",url:"https://carnegieendowment.org/posts/2025/09/understanding-africas-ai-governance-landscape-insights-from-policy-practice-and-dialogue"},
+      {name:"The Year of the Teeth: Data Protection in Africa Roundup 2025",url:"https://www.techhiveadvisory.africa/report/the-year-of-the-teeth-data-protection-in-africa-roundup-2025-projections-for-2026"},
+    ]},
+    {title:"🏢 Key Organisations",items:[
+      {name:"Africa Research Institute for AI (ARIFA)",url:"https://arifa.org"},
+      {name:"African Centre for Technology Studies",url:"https://acts-net.org"},
+      {name:"AI Safety Nigeria",url:"https://aisafetynigeria.com"},
+      {name:"AI Safety South Africa",url:"https://www.aisafetysa.com"},
+      {name:"Global Center on AI Governance",url:"https://www.globalcenter.ai"},
+      {name:"Equiano Institute",url:"https://www.equiano.institute"},
+      {name:"Paradigm Initiative",url:"https://paradigmhq.org"},
+      {name:"Research ICT Africa",url:"https://researchictafrica.net"},
+      {name:"Rwanda Centre for 4IR",url:"https://c4ir.rw/"},
+      {name:"Smart Africa",url:"http://www.smartafrica.org"},
+      {name:"Tech Governance Project",url:"https://www.tgov.org"},
+    ]},
+  ];
+  const [open,setOpen]=useState(null);
+  return <div style={{padding:"24px 16px 40px"}}>
+    {/* HEADER */}
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:8}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>Africa AI Policy Resources</div><div style={{fontSize:12,color:"#7a7a78"}}>Curated by Dr. Chinasa T. Okolo</div></div></div>
+
+    {/* ATTRIBUTION */}
+    <div style={{background:"rgba(96,165,250,.08)",border:"1px solid rgba(96,165,250,.25)",borderRadius:14,padding:16,marginBottom:20}}>
+      <div style={{fontSize:13,fontWeight:700,color:"#60a5fa",marginBottom:6}}>📣 Attribution</div>
+      <p style={{fontSize:13,color:"#c0c0be",lineHeight:1.65,marginBottom:10}}>
+        This resource list was created by <strong style={{color:"#e8e8e6"}}>Chinasa T. Okolo, Ph.D.</strong> — Computer Science PhD graduate from Cornell University, UN AI policy specialist, World Bank Group–Africa Fellow, and former fellow at the Brookings Institution.
+      </p>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+        <a href="http://www.chinasatokolo.com" target="_blank" style={{background:"rgba(96,165,250,.15)",color:"#60a5fa",borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700}}>🌐 chinasatokolo.com</a>
+        <a href="https://github.com/chinasatokolo/africaAIPolicyResources" target="_blank" style={{background:"rgba(255,255,255,.06)",color:"#e8e8e6",borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700}}>⭐ View on GitHub</a>
+      </div>
+      <div style={{fontSize:11,color:"#7a7a78",marginTop:10}}>Licensed under CC BY-NC 4.0 · Non-commercial use with attribution</div>
+    </div>
+
+    {/* SECTIONS */}
+    {sections.map((sec,si)=>(
+      <div key={si} style={{marginBottom:10}}>
+        <button onClick={()=>setOpen(open===si?null:si)} style={{width:"100%",background:"#111114",border:`1px solid ${open===si?"rgba(96,165,250,.4)":"#ffffff0d"}`,borderRadius:12,padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",color:open===si?"#60a5fa":"#e8e8e6",fontWeight:700,fontSize:14}}>
+          <span>{sec.title}</span>
+          <span style={{fontSize:18,color:"#7a7a78",transition:"transform .2s",transform:open===si?"rotate(90deg)":"none"}}>›</span>
+        </button>
+        {open===si&&<div style={{background:"#0d1018",border:"1px solid #ffffff08",borderTop:"none",borderRadius:"0 0 12px 12px",padding:"8px 0"}}>
+          {sec.items.map((item,ii)=>(
+            <a key={ii} href={item.url} target="_blank" style={{display:"flex",alignItems:"center",gap:10,padding:"10px 16px",borderBottom:ii<sec.items.length-1?"1px solid #ffffff06":"none",transition:"background .15s"}}
+              onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.03)"}
+              onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+              <span style={{width:6,height:6,borderRadius:"50%",background:"#60a5fa",flexShrink:0}}/>
+              <span style={{fontSize:13,color:"#c0c0be",flex:1,lineHeight:1.4}}>{item.name}</span>
+              <span style={{color:"#7a7a78",fontSize:12,flexShrink:0}}>↗</span>
+            </a>
+          ))}
+        </div>}
+      </div>
+    ))}
+
+    {/* FOOTER NOTE */}
+    <div style={{marginTop:20,background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:16,textAlign:"center"}}>
+      <div style={{fontSize:12,color:"#7a7a78",lineHeight:1.6}}>
+        🌍 Africa is shaping its own AI future.<br/>
+        <span style={{color:A,fontWeight:700}}>Business Hustle</span> is proud to surface this critical research.<br/>
+        <a href="https://github.com/chinasatokolo/africaAIPolicyResources" target="_blank" style={{color:"#60a5fa",fontWeight:700}}>Contribute to the repo on GitHub →</a>
+      </div>
+    </div>
+  </div>
+}
+
+/* ── SERVICES PAGE ── */
+const SERVICES=[
+  {icon:"🎯",title:"Brand Strategy",desc:"Position yourself to win",color:"#F5C518",detail:"We craft positioning strategies that make your brand unforgettable — from logo to market narrative."},
+  {icon:"💻",title:"Web Development",desc:"Sites that convert",color:"#a78bfa",detail:"Custom websites, landing pages and e-commerce stores built for speed, SEO, and conversions."},
+  {icon:"📈",title:"Digital Marketing",desc:"Grow fast, grow smart",color:"#34d399",detail:"Google Ads, Meta campaigns, SEO and social media management — all data-driven."},
+  {icon:"📸",title:"Content Creation",desc:"Stories that stick",color:"#f87171",detail:"Photo, video, copywriting and social content that captures your brand voice."},
+  {icon:"🤝",title:"Expert Network",desc:"Connect with pros",color:"#60a5fa",detail:"Tap into our vetted network of designers, developers and marketers on demand."},
+  {icon:"🧠",title:"Business Coaching",desc:"Level up your mindset",color:"#fb923c",detail:"1-on-1 sessions and group programmes to sharpen your strategy and execution."},
 ];
-function AIPlan({addXP}){
-  const [step,setStep]=useState(0);
-  const [ans,setAns]=useState(Array(PQ.length).fill(""));
-  const [plan,setPlan]=useState("");
-  const [loading,setLoading]=useState(false);
-  const [done,setDone]=useState(false);
-
-  async function generate(){
-    setLoading(true);
-    try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          model:"claude-sonnet-4-20250514",
-          max_tokens:1500,
-          messages:[{role:"user",content:`Create a punchy, actionable 1-page business plan for a South African entrepreneur based on:
-Business: ${ans[0]}
-Target Customer: ${ans[1]}
-Revenue Model: ${ans[2]}
-Competition & Differentiator: ${ans[3]}
-6-Month Goal: ${ans[4]}
-
-Format with these sections using emoji headers:
-🎯 Mission Statement (1 punchy sentence)
-👥 Target Market (2-3 bullet points)
-💰 Revenue Streams (2-3 bullet points)
-⚡ Competitive Advantage (2-3 bullet points)
-📈 6-Month Milestones (4 specific, measurable milestones)
-🚀 First 3 Actions To Take This Week
-
-Keep it energetic, South African, and practical. No corporate fluff. Use simple language.`}]
-        })
-      });
-      const d=await res.json();
-      setPlan(d.content?.[0]?.text||"Unable to generate plan. Please try again.");
-      setDone(true);
-      addXP(100,"🧠 +100 XP for generating your business plan!");
-    }catch(e){
-      setPlan("Connection error. Please check your internet and try again.");
-      setDone(true);
-    }
-    setLoading(false);
-  }
-
-  function reset(){setStep(0);setAns(Array(PQ.length).fill(""));setPlan("");setDone(false);}
-
-  if(done) return <div style={{padding:"24px 16px"}}>
-    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-      <BHLogo size={36}/>
-      <div><div style={{fontSize:18,fontWeight:900}}>Your Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>AI-generated · Ready to share</div></div>
-    </div>
-    <div style={{background:"#111114",border:`1px solid ${A}30`,borderRadius:16,padding:18,marginBottom:16,maxHeight:420,overflowY:"auto"}}>
-      <pre style={{fontFamily:"inherit",fontSize:13,color:"#e8e8e6",lineHeight:1.85,whiteSpace:"pre-wrap",margin:0}}>{plan}</pre>
-    </div>
-    <a href={`https://wa.me/27744815163?text=Hi! I just used Business Hustle AI to create my business plan. Can we discuss next steps?`} target="_blank"
-      style={{display:"block",background:"#25D366",color:"#fff",textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>
-      💬 Discuss with a BH Expert →
-    </a>
-    <a href="https://www.businesshustle.co.za/get-started" target="_blank"
-      style={{display:"block",background:`${A}15`,border:`1px solid ${A}40`,color:A,textAlign:"center",borderRadius:12,padding:13,fontWeight:800,fontSize:14,marginBottom:10}}>
-      📚 Get the Full Resource Guide →
-    </a>
-    <button onClick={reset} style={{width:"100%",background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>
-      ← Generate a New Plan
-    </button>
-  </div>
-
+function Services(){
+  const [active,setActive]=useState(null);
   return <div style={{padding:"24px 16px"}}>
-    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
-      <BHLogo size={36}/>
-      <div><div style={{fontSize:19,fontWeight:900}}>AI Business Plan</div><div style={{fontSize:12,color:"#7a7a78"}}>5 questions → full plan · Earn 100 XP</div></div>
-    </div>
-    <div style={{display:"flex",gap:5,marginBottom:20}}>
-      {PQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15",transition:"background .3s"}}/>)}
-    </div>
-    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
-      <div style={{fontSize:12,color:"#7a7a78",marginBottom:8}}>Question {step+1} of {PQ.length}</div>
-      <div style={{fontSize:16,fontWeight:700,marginBottom:16,lineHeight:1.5,color:"#e8e8e6"}}>{PQ[step].q}</div>
-      <textarea
-        value={ans[step]}
-        onChange={e=>{const a=[...ans];a[step]=e.target.value;setAns(a);}}
-        placeholder={PQ[step].ph}
-        rows={3}
-        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,outline:"none",resize:"none",boxSizing:"border-box",marginBottom:14}}
-      />
-      {step<PQ.length-1
-        ?<button onClick={()=>{if(ans[step].trim())setStep(s=>s+1);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>
-          Next →
-        </button>
-        :<button onClick={()=>{if(ans[step].trim())generate();}} disabled={loading} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:13,fontWeight:800,fontSize:15,opacity:loading?.7:1}}>
-          {loading?"✨ Generating your plan…":"🚀 Generate My Business Plan"}
-        </button>
-      }
-      {step>0&&<button onClick={()=>setStep(s=>s-1)} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13,marginTop:10,padding:6}}>← Back</button>}
-    </div>
-
-    <div style={{marginTop:16,background:"#111114",border:"1px solid #ffffff0d",borderRadius:14,padding:16}}>
-      <div style={{fontSize:13,fontWeight:700,marginBottom:8,color:"#e8e8e6"}}>💡 What you'll get</div>
-      {["🎯 A clear mission statement","👥 Defined target market","💰 Revenue stream breakdown","📈 4 measurable 6-month milestones","🚀 3 actions to take this week"].map(i=>(
-        <div key={i} style={{fontSize:12,color:"#7a7a78",marginBottom:5,paddingLeft:4}}>{i}</div>
-      ))}
-    </div>
-  </div>
-}
-
-/* ── DASHBOARD ── */
-function Dashboard({leads,xp,streak}){
-  const badge=getBadge(xp);
-  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  const today=new Date().getDay();
-  const bars=days.map((_,i)=>i===(today===0?6:today-1)?95:Math.floor(Math.random()*55)+10);
-  return <div style={{padding:"24px 16px"}}>
-    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>Analytics Dashboard</div><div style={{fontSize:12,color:"#7a7a78"}}>Your hustle metrics</div></div></div>
-    <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:16}}>
-      {[{icon:"👥",label:"Leads",val:leads.length,color:"#60a5fa"},{icon:"⚡",label:"Total XP",val:xp,color:A},{icon:"🔥",label:"Streak",val:streak+"d",color:"#fb923c"},{icon:"🏆",label:"Badge",val:badge.label,color:badge.color}].map(s=>(
-        <div key={s.label} style={{background:"#111114",border:`1px solid ${s.color}25`,borderRadius:14,padding:"14px 16px"}}>
-          <div style={{fontSize:20,marginBottom:6}}>{s.icon}</div>
-          <div style={{fontSize:18,fontWeight:900,color:s.color}}>{s.val}</div>
-          <div style={{fontSize:11,color:"#7a7a78",marginTop:2}}>{s.label}</div>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>All Services</div><div style={{color:"#7a7a78",fontSize:12}}>Tap a service to learn more</div></div></div>
+    <div style={{display:"flex",flexDirection:"column",gap:10}}>
+      {SERVICES.map(s=>(
+        <div key={s.title} onClick={()=>setActive(active===s.title?null:s.title)} style={{background:"#111114",border:`1px solid ${active===s.title?s.color+"60":s.color+"18"}`,borderRadius:14,padding:"15px 16px",cursor:"pointer"}}>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <span style={{fontSize:26}}>{s.icon}</span>
+            <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14}}>{s.title}</div><div style={{fontSize:12,color:"#7a7a78"}}>{s.desc}</div></div>
+            <span style={{color:"#7a7a78",fontSize:18,transition:"transform .2s",transform:active===s.title?"rotate(90deg)":"none"}}>›</span>
+          </div>
+          {active===s.title&&<div style={{marginTop:12,paddingTop:12,borderTop:"1px solid #ffffff0d"}}>
+            <p style={{fontSize:13,color:"#9a9a98",lineHeight:1.65,margin:"0 0 12px"}}>{s.detail}</p>
+            <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"inline-block",background:s.color,color:"#0a0a0b",borderRadius:10,padding:"8px 16px",fontWeight:800,fontSize:13}}>Get Started →</a>
+          </div>}
         </div>
       ))}
     </div>
-    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:18,marginBottom:16}}>
-      <div style={{fontWeight:700,fontSize:14,marginBottom:14}}>Weekly Activity</div>
-      <div style={{display:"flex",alignItems:"flex-end",gap:6,height:80}}>
-        {bars.map((h,i)=>(
-          <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-            <div style={{width:"100%",background:i===(today===0?6:today-1)?A:`${A}30`,borderRadius:"4px 4px 0 0",height:`${h}%`,minHeight:4}}/>
-            <div style={{fontSize:9,color:"#7a7a78"}}>{days[i].slice(0,2)}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:18}}>
-      <div style={{fontWeight:700,fontSize:14,marginBottom:12}}>Recent Leads</div>
-      {leads.length===0
-        ?<div style={{fontSize:13,color:"#7a7a78",textAlign:"center",padding:"20px 0"}}>No leads yet — share your portal! 🚀</div>
-        :leads.slice(-5).reverse().map((l,i)=>(
-          <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 0",borderBottom:i<Math.min(leads.length,5)-1?"1px solid #ffffff08":"none"}}>
-            <div style={{width:34,height:34,background:`${A}20`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:A,flexShrink:0}}>{(l.name||"?")[0].toUpperCase()}</div>
-            <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700}}>{l.name}</div><div style={{fontSize:11,color:"#7a7a78"}}>{l.email}</div></div>
-            <div style={{fontSize:10,color:"#7a7a78"}}>{l.time}</div>
-          </div>
-        ))
-      }
-    </div>
-  </div>
-}
-
-/* ── HUSTLE QUIZ ── */
-const HQ=[
-  {q:"How many hours do you work on your business per week?",opts:["0–5 hrs","6–15 hrs","16–30 hrs","30+ hrs"],scores:[5,15,25,40]},
-  {q:"Do you have a website or online presence?",opts:["Not yet","Social only","Website (basic)","Full digital presence"],scores:[0,10,20,30]},
-  {q:"How do you find new customers?",opts:["Word of mouth only","Some social posting","Consistent marketing","Paid + organic strategy"],scores:[5,10,20,30]},
-];
-function HustleQuiz({addXP,setPage}){
-  const [step,setStep]=useState(0),[ans,setAns]=useState([]),[result,setResult]=useState(null);
-  function pick(score){
-    const next=[...ans,score];setAns(next);
-    if(step<HQ.length-1)setStep(s=>s+1);
-    else{const t=next.reduce((a,b)=>a+b,0),mx=HQ.reduce((a,q)=>a+Math.max(...q.scores),0);setResult(Math.round((t/mx)*100));addXP(40,"🔥 +40 XP for Hustle Score!");}
-  }
-  const getL=s=>s<30?["🌱","Seedling","Let's plant the right seeds.","#34d399"]:s<60?["🔥","Side Hustler","Time to turn up the heat!","#fb923c"]:s<85?["⚡","Grind Mode","Let's take you to the next level!",A]:["👑","Full Hustle","Let's scale this empire.","#a78bfa"];
-  if(result!==null){
-    const [em,lb,msg,col]=getL(result);
-    return <div style={{padding:"40px 20px",textAlign:"center"}}>
-      <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><BHLogo size={52}/></div>
-      <div style={{fontSize:52,marginBottom:10}}>{em}</div>
-      <div style={{fontSize:28,fontWeight:900,color:col,marginBottom:6}}>{result}% Hustle</div>
-      <div style={{fontSize:20,fontWeight:800,marginBottom:10}}>{lb}</div>
-      <p style={{color:"#7a7a78",marginBottom:20,lineHeight:1.6,fontSize:14}}>{msg}</p>
-      <div style={{background:"#111114",borderRadius:100,height:12,margin:"0 0 24px",overflow:"hidden"}}><div style={{height:"100%",width:`${result}%`,background:`linear-gradient(90deg,${col},${A})`,borderRadius:100}}/></div>
-      <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"block",background:A,color:"#0a0a0b",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>🚀 Get the full playbook →</a>
-        <button onClick={()=>setPage("plan")} style={{background:"rgba(167,139,250,.2)",border:"1px solid rgba(167,139,250,.4)",color:"#a78bfa",borderRadius:12,padding:13,fontWeight:800,fontSize:14}}>🧠 Generate My Business Plan</button>
-        <button onClick={()=>{setStep(0);setAns([]);setResult(null);}} style={{background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>Retake Quiz</button>
-      </div>
-    </div>
-  }
-  return <div style={{padding:"24px 16px"}}>
-    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>🔥 Hustle Score</div><div style={{fontSize:12,color:"#7a7a78"}}>Earn 40 XP on completion</div></div></div>
-    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
-      <div style={{display:"flex",gap:6,marginBottom:16}}>{HQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15"}}/>)}</div>
-      <div style={{fontSize:12,color:"#7a7a78",marginBottom:10}}>Question {step+1} of {HQ.length}</div>
-      <p style={{fontSize:16,fontWeight:700,marginBottom:18,lineHeight:1.5}}>{HQ[step].q}</p>
-      <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        {HQ[step].opts.map((o,i)=>(
-          <button key={i} onClick={()=>pick(HQ[step].scores[i])} style={{background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:12,padding:"13px 16px",color:"#e8e8e6",fontWeight:600,fontSize:14,textAlign:"left"}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor=`${A}60`;e.currentTarget.style.color=A;}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor="#ffffff15";e.currentTarget.style.color="#e8e8e6";}}>
-            {o}
-          </button>
-        ))}
-      </div>
-    </div>
+    <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"flex",alignItems:"center",gap:14,marginTop:20,background:`${A}15`,border:`1px solid ${A}40`,borderRadius:16,padding:"16px 18px"}}>
+      <span style={{fontSize:28}}>📚</span>
+      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:14,color:"#e8e8e6"}}>Resource Centre</div><div style={{fontSize:12,color:"#7a7a78"}}>businesshustle.co.za/get-started</div></div>
+      <span style={{color:A,fontWeight:900}}>→</span>
+    </a>
   </div>
 }
 
@@ -434,6 +499,53 @@ function Shop({addXP}){
   </div>
 }
 
+/* ── HUSTLE QUIZ ── */
+const HQ=[
+  {q:"How many hours do you work on your business per week?",opts:["0–5 hrs","6–15 hrs","16–30 hrs","30+ hrs"],scores:[5,15,25,40]},
+  {q:"Do you have a website or online presence?",opts:["Not yet","Social only","Website (basic)","Full digital presence"],scores:[0,10,20,30]},
+  {q:"How do you find new customers?",opts:["Word of mouth only","Some social posting","Consistent marketing","Paid + organic strategy"],scores:[5,10,20,30]},
+];
+function HustleQuiz({addXP,setPage}){
+  const [step,setStep]=useState(0),[ans,setAns]=useState([]),[result,setResult]=useState(null);
+  function pick(score){
+    const next=[...ans,score];setAns(next);
+    if(step<HQ.length-1)setStep(s=>s+1);
+    else{const t=next.reduce((a,b)=>a+b,0),mx=HQ.reduce((a,q)=>a+Math.max(...q.scores),0);setResult(Math.round((t/mx)*100));addXP(40,"🔥 +40 XP for Hustle Score!");}
+  }
+  const getL=s=>s<30?["🌱","Seedling","Let's plant the right seeds.","#34d399"]:s<60?["🔥","Side Hustler","Time to turn up the heat!","#fb923c"]:s<85?["⚡","Grind Mode","Let's take you to the next level!",A]:["👑","Full Hustle","Let's scale this empire.","#a78bfa"];
+  if(result!==null){
+    const [em,lb,msg,col]=getL(result);
+    return <div style={{padding:"40px 20px",textAlign:"center"}}>
+      <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><BHLogo size={52}/></div>
+      <div style={{fontSize:52,marginBottom:10}}>{em}</div>
+      <div style={{fontSize:28,fontWeight:900,color:col,marginBottom:6}}>{result}% Hustle</div>
+      <div style={{fontSize:20,fontWeight:800,marginBottom:10}}>{lb}</div>
+      <p style={{color:"#7a7a78",marginBottom:20,lineHeight:1.6,fontSize:14}}>{msg}</p>
+      <div style={{background:"#111114",borderRadius:100,height:12,margin:"0 0 24px",overflow:"hidden"}}><div style={{height:"100%",width:`${result}%`,background:`linear-gradient(90deg,${col},${A})`,borderRadius:100}}/></div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        <a href="https://www.businesshustle.co.za/get-started" target="_blank" style={{display:"block",background:A,color:"#0a0a0b",borderRadius:12,padding:13,fontWeight:800,fontSize:15}}>🚀 Get the full playbook →</a>
+        <button onClick={()=>setPage("plan")} style={{background:"rgba(167,139,250,.2)",border:"1px solid rgba(167,139,250,.4)",color:"#a78bfa",borderRadius:12,padding:13,fontWeight:800,fontSize:14}}>🧠 Generate My Business Plan</button>
+        <button onClick={()=>{setStep(0);setAns([]);setResult(null);}} style={{background:"#111114",border:"1px solid #ffffff15",color:"#e8e8e6",borderRadius:12,padding:12,fontWeight:700,fontSize:14}}>Retake Quiz</button>
+      </div>
+    </div>
+  }
+  return <div style={{padding:"24px 16px"}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><BHLogo size={36}/><div><div style={{fontSize:19,fontWeight:900}}>🔥 Hustle Score</div><div style={{fontSize:12,color:"#7a7a78"}}>Earn 40 XP on completion</div></div></div>
+    <div style={{background:"#111114",border:"1px solid #ffffff0d",borderRadius:16,padding:20}}>
+      <div style={{display:"flex",gap:6,marginBottom:16}}>{HQ.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=step?A:"#ffffff15"}}/>)}</div>
+      <div style={{fontSize:12,color:"#7a7a78",marginBottom:10}}>Question {step+1} of {HQ.length}</div>
+      <p style={{fontSize:16,fontWeight:700,marginBottom:18,lineHeight:1.5}}>{HQ[step].q}</p>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {HQ[step].opts.map((o,i)=>(
+          <button key={i} onClick={()=>pick(HQ[step].scores[i])} style={{background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:12,padding:"13px 16px",color:"#e8e8e6",fontWeight:600,fontSize:14,textAlign:"left"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=`${A}60`;e.currentTarget.style.color=A;}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor="#ffffff15";e.currentTarget.style.color="#e8e8e6";}}>{o}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+}
+
 /* ── CONTACT ── */
 function Contact({addXP,addLead}){
   const [sent,setSent]=useState(false),[form,setForm]=useState({name:"",email:"",msg:""});
@@ -441,7 +553,7 @@ function Contact({addXP,addLead}){
     if(!form.name||!form.email||!form.msg)return;
     addLead(form.name,form.email);addXP(50,"🎯 +50 XP for reaching out!");setSent(true);
   }
-  if(sent) return <div style={{padding:"60px 20px",textAlign:"center"}}>
+  if(sent)return <div style={{padding:"60px 20px",textAlign:"center"}}>
     <BHLogo size={56}/><div style={{fontSize:48,margin:"16px 0 10px"}}>🎉</div>
     <div style={{fontSize:22,fontWeight:900,marginBottom:10}}>Message sent!</div>
     <div style={{color:"#7a7a78",marginBottom:24,fontSize:14}}>We'll respond within 2 hours. You earned 50 XP! ⚡</div>
@@ -471,70 +583,10 @@ function Contact({addXP,addLead}){
   </div>
 }
 
-/* ── AI CHAT ── */
-function AIChat({onClose,addXP}){
-  const [msgs,setMsgs]=useState([{r:"bot",t:"Hey! 👋 I'm your BH AI advisor. Ask me anything about growing your business, pricing, or strategy!"}]);
-  const [inp,setInp]=useState(""),[loading,setLoading]=useState(false);
-  const history=useRef([]),bottom=useRef(null);
-  useEffect(()=>{bottom.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
-  async function send(){
-    if(!inp.trim()||loading)return;
-    const txt=inp.trim();setInp("");
-    setMsgs(m=>[...m,{r:"user",t:txt}]);
-    history.current.push({role:"user",content:txt});
-    setLoading(true);addXP(15,"💬 +15 XP!");
-    try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,system:"You are an energetic business advisor for Business Hustle SA (businesshustle.co.za). Keep answers to 2-3 sentences max. Be punchy and practical. Use emojis sparingly. Always end with one actionable next step.",messages:history.current})});
-      const d=await res.json();
-      const reply=d.content?.[0]?.text||"Try again!";
-      history.current.push({role:"assistant",content:reply});
-      setMsgs(m=>[...m,{r:"bot",t:reply}]);
-    }catch{setMsgs(m=>[...m,{r:"bot",t:"Connection hiccup! Try again 💪"}]);}
-    setLoading(false);
-  }
-  return <div style={{position:"fixed",bottom:80,left:10,right:10,maxWidth:400,margin:"0 auto",background:"#111114",border:`1px solid ${A}40`,borderRadius:20,boxShadow:"0 20px 60px #000c",zIndex:999,display:"flex",flexDirection:"column",overflow:"hidden"}}>
-    <div style={{background:A,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-      <div style={{display:"flex",alignItems:"center",gap:10}}><BHLogo size={30}/><div><div style={{fontWeight:900,color:"#0a0a0b",fontSize:14}}>BH AI Advisor</div><div style={{fontSize:11,color:"rgba(10,10,11,.6)"}}>+15 XP per question</div></div></div>
-      <button onClick={onClose} style={{background:"none",border:"none",fontSize:18,color:"rgba(10,10,11,.6)"}}>✕</button>
-    </div>
-    <div style={{overflowY:"auto",padding:14,display:"flex",flexDirection:"column",gap:10,maxHeight:260}}>
-      {msgs.map((m,i)=>(
-        <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
-          <div style={{background:m.r==="user"?A:"#1e1e22",color:m.r==="user"?"#0a0a0b":"#e8e8e6",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",maxWidth:"82%",fontSize:13,lineHeight:1.55}}>{m.t}</div>
-        </div>
-      ))}
-      {loading&&<div style={{display:"flex",gap:5,padding:"10px 14px",background:"#1e1e22",borderRadius:"16px 16px 16px 4px",width:"fit-content"}}>
-        {[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:A,animation:`bounce 1s ${i*.2}s infinite`}}/>)}
-      </div>}
-      <div ref={bottom}/>
-    </div>
-    <div style={{padding:"10px 12px",borderTop:"1px solid #ffffff10",display:"flex",gap:8}}>
-      <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Ask anything…"
-        style={{flex:1,background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"9px 12px",color:"#e8e8e6",fontSize:13,outline:"none"}}/>
-      <button onClick={send} disabled={loading} style={{background:A,border:"none",borderRadius:10,width:38,fontSize:16,fontWeight:800,color:"#0a0a0b"}}>→</button>
-    </div>
-  </div>
-}
-
-/* ── LEAD MODAL ── */
-function LeadModal({onClose,onSubmit}){
-  const [name,setName]=useState(""),[email,setEmail]=useState("");
-  return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:9998,display:"flex",alignItems:"flex-end"}}>
-    <div style={{background:"#111114",borderRadius:"20px 20px 0 0",padding:"28px 20px 36px",width:"100%",border:`1px solid ${A}40`}}>
-      <div style={{textAlign:"center",marginBottom:20}}>
-        <div style={{fontSize:36,marginBottom:10}}>🎁</div>
-        <div style={{fontWeight:900,fontSize:20,marginBottom:6}}>Free Business Toolkit</div>
-        <div style={{fontSize:13,color:"#7a7a78",lineHeight:1.6}}>Get our R2,000 starter kit — templates, checklists & strategy guide — completely free.</div>
-      </div>
-      <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"
-        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:10,outline:"none",boxSizing:"border-box"}}/>
-      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email address" type="email"
-        style={{display:"block",width:"100%",background:"#0a0a0b",border:"1px solid #ffffff15",borderRadius:10,padding:"11px 14px",color:"#e8e8e6",fontSize:14,marginBottom:14,outline:"none",boxSizing:"border-box"}}/>
-      <button onClick={()=>{if(name&&email)onSubmit(name,email);}} style={{width:"100%",background:A,color:"#0a0a0b",border:"none",borderRadius:12,padding:14,fontWeight:900,fontSize:15,marginBottom:10}}>Claim Free Toolkit →</button>
-      <button onClick={onClose} style={{width:"100%",background:"none",border:"none",color:"#7a7a78",fontSize:13}}>No thanks</button>
-    </div>
-  </div>
-}
+/* ── BADGES ── */
+const BADGES=[{min:0,icon:"🌱",label:"Seedling",color:"#34d399"},{min:100,icon:"🔥",label:"Side Hustler",color:"#fb923c"},{min:300,icon:"⚡",label:"Grind Mode",color:A},{min:600,icon:"💎",label:"Power Player",color:"#60a5fa"},{min:1000,icon:"👑",label:"Full Hustle",color:"#a78bfa"}];
+function getBadge(xp){return[...BADGES].reverse().find(b=>xp>=b.min)||BADGES[0];}
+function getNext(xp){return BADGES.find(b=>b.min>xp)||null;}
 
 /* ── APP ── */
 const NAV=[
@@ -556,50 +608,47 @@ function App(){
   const visited=useRef(new Set());
 
   useEffect(()=>{
-    const t=setTimeout(()=>{
-      if(!load("bh_modal",false)){setShowLead(true);save("bh_modal",true);}
-    },25000);
+    const t=setTimeout(()=>{if(!load("bh_modal",false)){setShowLead(true);save("bh_modal",true);}},25000);
     return()=>clearTimeout(t);
   },[]);
 
-  function addXP(amt,msg){
-    setXP(prev=>{const n=prev+amt;save("bh_xp",n);return n;});
-    if(msg)setToast(msg);
-  }
-  function addLead(name,email){
-    const time=new Date().toLocaleTimeString("en-ZA",{hour:"2-digit",minute:"2-digit"});
-    const n=[...leads,{name,email,time}];
-    setLeads(n);save("bh_leads",n);
-  }
-  function go(id){
-    setPage(id);
-    if(!visited.current.has(id)){visited.current.add(id);addXP(5,"✨ +5 XP for exploring!");}
-  }
+  function addXP(amt,msg){setXP(prev=>{const n=prev+amt;save("bh_xp",n);return n;});if(msg)setToast(msg);}
+  function addLead(name,email){const time=new Date().toLocaleTimeString("en-ZA",{hour:"2-digit",minute:"2-digit"});const n=[...leads,{name,email,time}];setLeads(n);save("bh_leads",n);}
+  function go(id){setPage(id);if(!visited.current.has(id)){visited.current.add(id);addXP(5,"✨ +5 XP for exploring!");}}
 
   const badge=getBadge(xp);
+  const next=getNext(xp);
+  const prog=next?Math.round(((xp-badge.min)/(next.min-badge.min))*100):100;
+
   const pages={
-    home:<Home setPage={go} xp={xp} streak={streak} addXP={addXP} leads={leads}/>,
+    home:<Home setPage={go} addXP={addXP}/>,
     plan:<AIPlan addXP={addXP}/>,
     challenges:<Challenges addXP={addXP} setPage={go}/>,
     shop:<Shop addXP={addXP}/>,
     hustle:<HustleQuiz addXP={addXP} setPage={go}/>,
+    services:<Services/>,
     contact:<Contact addXP={addXP} addLead={addLead}/>,
-    dashboard:<Dashboard leads={leads} xp={xp} streak={streak}/>,
+    aipolicy:<AfricaAIPolicy/>,
   };
 
   return <div style={{background:"#0a0a0b",color:"#e8e8e6",minHeight:"100vh",maxWidth:430,margin:"0 auto",display:"flex",flexDirection:"column"}}>
     {toast&&<XPToast msg={toast} onDone={()=>setToast(null)}/>}
     {showLead&&<LeadModal onClose={()=>setShowLead(false)} onSubmit={(n,e)=>{addLead(n,e);addXP(75,"🎁 +75 XP for claiming toolkit!");setShowLead(false);}}/>}
 
+    {/* HEADER */}
     <div style={{position:"sticky",top:0,zIndex:50,background:"rgba(10,10,11,.95)",backdropFilter:"blur(20px)",borderBottom:"1px solid #ffffff0d",padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:10}}>
         <BHLogo size={32}/>
         <div><div style={{fontWeight:900,fontSize:14,lineHeight:1.2}}>Business <span style={{color:A}}>Hustle</span></div><div style={{fontSize:9,color:"#7a7a78"}}>businesshustle.co.za</div></div>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <button onClick={()=>go("dashboard")} style={{background:"#111114",border:"1px solid #ffffff15",borderRadius:10,padding:"6px 12px",color:A,fontWeight:800,fontSize:12}}>
-          {badge.icon} {xp} XP
-        </button>
+        {/* XP Badge with mini progress */}
+        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:2,cursor:"pointer"}} onClick={()=>go("challenges")}>
+          <div style={{background:"#111114",border:"1px solid #ffffff15",borderRadius:10,padding:"4px 10px",color:A,fontWeight:800,fontSize:12}}>{badge.icon} {xp} XP</div>
+          <div style={{width:80,height:3,background:"#ffffff10",borderRadius:100,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${prog}%`,background:`linear-gradient(90deg,${badge.color},${A})`,borderRadius:100,transition:"width .5s"}}/>
+          </div>
+        </div>
         <button onClick={()=>setChatOpen(o=>!o)} style={{background:chatOpen?A:"#111114",border:`1px solid ${chatOpen?A:"#ffffff20"}`,borderRadius:10,padding:"6px 10px",color:chatOpen?"#0a0a0b":"#e8e8e6",fontWeight:700,fontSize:12}}>
           🤖 AI
         </button>
@@ -608,6 +657,7 @@ function App(){
 
     <div style={{flex:1,overflowY:"auto",paddingBottom:80}}>{pages[page]||pages.home}</div>
 
+    {/* BOTTOM NAV */}
     <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(10,10,11,.97)",backdropFilter:"blur(20px)",borderTop:"1px solid #ffffff0d",display:"flex",zIndex:50}}>
       {NAV.map(n=>(
         <button key={n.id} onClick={()=>go(n.id)} style={{flex:1,background:"none",border:"none",color:page===n.id?A:"#7a7a78",padding:"9px 4px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
