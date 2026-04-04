@@ -2176,13 +2176,12 @@ document.getElementById('lead-modal').addEventListener('click',function(e){if(e.
 /* ═══════════════════════════════════
    MEMBERSHIP SYSTEM
 ═══════════════════════════════════ */
-// Valid pro codes — in production these would be generated server-side
-// Format: BHP-XXXX where XXXX is alphanumeric
-// Add new codes here as you issue them via WhatsApp post-payment
-const PRO_CODES = ['BHP-2025','BHP-BETA','BHP-STAFF','BHP-LAUNCH'];
+// Pro codes are validated server-side via Google Sheets.
+// Manage codes in the "Pro Codes" tab of your HustlePortal Sheet.
+// Nothing sensitive is stored in this file.
 
 let isPro = load('hp_pro', false);
-let _paywallPendingAction = null; // stores the function to run after unlock
+let _paywallPendingAction = null;
 
 function checkPro() { return isPro; }
 
@@ -2237,19 +2236,53 @@ function showProCodeEntry() {
   setTimeout(() => document.getElementById('pro-code-inp')?.focus(), 100);
 }
 
-function redeemProCode() {
-  const code = (document.getElementById('pro-code-inp')?.value || '').trim().toUpperCase();
+async function redeemProCode() {
+  const inp = document.getElementById('pro-code-inp');
+  const code = (inp?.value || '').trim().toUpperCase();
   if(!code) return showToast('Enter your access code', 'err');
-  if(PRO_CODES.includes(code)) {
-    document.getElementById('paywall-modal').classList.remove('open');
-    unlockPro(`Code: ${code}`);
-  } else {
-    showToast('❌ Invalid code — check WhatsApp or contact us', 'err');
-    document.getElementById('pro-code-inp').style.borderColor = 'var(--red)';
-    setTimeout(() => {
-      if(document.getElementById('pro-code-inp'))
-        document.getElementById('pro-code-inp').style.borderColor = '';
-    }, 2000);
+
+  // Show loading state
+  const btn = inp?.nextElementSibling;
+  const origText = btn?.textContent;
+  if(btn) { btn.textContent = '…'; btn.disabled = true; }
+  inp.disabled = true;
+
+  try {
+    const r = await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'validate_code',
+        data: {
+          code,
+          business: bizProfile?.name || 'Unknown',
+        },
+      }),
+    });
+
+    // Apps Script uses no-cors in some setups — handle opaque response gracefully
+    let result = { valid: false, reason: 'network' };
+    try { result = await r.json(); } catch(e) {}
+
+    if(result.valid) {
+      document.getElementById('paywall-modal').classList.remove('open');
+      unlockPro(`Code: ${code}`);
+    } else {
+      const msgs = {
+        revoked:      '❌ This code has been revoked.',
+        already_used: '❌ This code has already been used.',
+        not_found:    '❌ Invalid code — check your WhatsApp message.',
+        network:      '⚠️ Could not connect — try again or contact us on WhatsApp.',
+      };
+      showToast(msgs[result.reason] || '❌ Invalid code — contact us on WhatsApp.', 'err');
+      inp.style.borderColor = 'var(--red)';
+      setTimeout(() => { if(inp) inp.style.borderColor = ''; }, 2500);
+    }
+  } catch(e) {
+    showToast('⚠️ Connection error — contact us on WhatsApp to unlock manually.', 'err');
+  } finally {
+    if(btn) { btn.textContent = origText; btn.disabled = false; }
+    if(inp) inp.disabled = false;
   }
 }
 
