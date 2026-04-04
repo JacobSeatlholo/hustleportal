@@ -246,7 +246,7 @@ img{max-width:100%;height:auto}
 ═══════════════════════════════════ */
 .res-section{margin-bottom:8px}
 .res-btn{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;color:var(--text);text-align:left;cursor:pointer;transition:border-color .2s}
-.res-detail{display:none;background:#0d0d0e;border:1px solid rgba(255,255,255,.05);border-top:none;border-radius:0 0 10px 10px;padding:4px 0}
+.res-detail{background:#0d0d0e;border:1px solid rgba(255,255,255,.05);border-top:none;border-radius:0 0 10px 10px;padding:4px 0}
 .res-detail a{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:12px;color:#e8e8e6;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
 .res-detail a:last-child{border-bottom:none}
 .res-detail a:hover{background:rgba(255,255,255,.03)}
@@ -2065,19 +2065,23 @@ function renderResources(){
   if(!el)return;
   el.innerHTML=RESOURCES.map((cat,ci)=>{
     const isOpen = resOpen===ci;
-    return `<div class="res-section">
-      <button class="res-btn" onclick="toggleRes(${ci})" style="${isOpen?`border-color:${cat.color}50;color:${cat.color}`:''}">
+    const itemsHtml = isOpen ? cat.items.map(([name,url,desc])=>`
+      <a href="${url}" target="_blank" rel="noopener noreferrer" onclick="addXP(3,'📚 +3 XP!')">
+        <span class="res-dot" style="background:${cat.color}"></span>
+        <div style="flex:1">
+          <div style="font-weight:500;font-size:12px">${esc(name)}</div>
+          <div style="font-size:10px;color:var(--muted2)">${esc(desc)}</div>
+        </div>
+        <span style="color:var(--muted2);font-size:12px">↗</span>
+      </a>`).join('') : '';
+    return `<div class="res-section" style="margin-bottom:8px">
+      <button class="res-btn" onclick="toggleRes(${ci})" style="${isOpen?`border-color:${cat.color}50;color:${cat.color};border-radius:10px 10px 0 0`:''}">
         <span style="font-size:20px">${cat.icon}</span>
         <span style="flex:1;font-size:14px">${esc(cat.title)}</span>
         <span style="font-size:11px;color:var(--muted2);background:rgba(255,255,255,.06);border-radius:4px;padding:2px 8px">${cat.items.length}</span>
-        <span style="color:var(--muted2);font-size:18px;transition:transform .3s;display:inline-block${isOpen?';transform:rotate(90deg)':''}">›</span>
+        <span style="color:var(--muted2);font-size:18px;display:inline-block;transition:transform .25s;${isOpen?'transform:rotate(90deg)':''}">›</span>
       </button>
-      ${isOpen?`<div class="res-detail">${cat.items.map(([name,url,desc])=>`
-        <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" onclick="addXP(3,'📚 +3 XP!')">
-          <span class="res-dot" style="background:${cat.color}"></span>
-          <div style="flex:1"><div style="font-weight:500;font-size:12px">${esc(name)}</div><div style="font-size:10px;color:var(--muted2)">${esc(desc)}</div></div>
-          <span style="color:var(--muted2);font-size:12px">↗</span>
-        </a>`).join('')}</div>`:''}
+      ${isOpen?`<div class="res-detail">${itemsHtml}</div>`:''}
     </div>`;
   }).join('');
 }
