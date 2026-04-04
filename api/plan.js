@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   // Route code validation to Apps Script server-side (no CORS issues)
   if (body?.event === 'validate_code') {
     const SHEET_URL = process.env.SHEET_URL ||
-      'https://script.google.com/macros/s/AKfycbwN5YhdUJHkSMFNiLRfSxXdJG4hYU6mfFi0h0ak_F0gz5KiOI95tZP29qWNORG15aricw/exec';
+      'https://script.google.com/macros/s/AKfycbzgSeTR5mHyUubtu9iGnV0CD0EnWv7kQdDCw-Oqki-jnNXq4nh3IVP5O9hno-0YGYMKCA/exec';
     try {
       const r = await fetch(SHEET_URL, {
         method: 'POST',
