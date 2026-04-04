@@ -339,7 +339,18 @@ body.desktop .tile-grid{grid-template-columns:repeat(3,1fr)}
 body.desktop #ai-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 body.desktop #chat-box{max-width:480px}
 
-/* ── FAQ details ── */
+/* ═══════════════════════════════════
+   MEMBERSHIP / PAYWALL
+═══════════════════════════════════ */
+.pro-badge{display:inline-flex;align-items:center;gap:5px;background:var(--a);color:#0a0a0b;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:100px;vertical-align:middle;margin-left:6px}
+.free-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);color:var(--muted2);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:100px;vertical-align:middle;margin-left:6px}
+.locked-btn{position:relative;opacity:.65;cursor:pointer!important}
+.locked-btn::after{content:'🔒';position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:11px;pointer-events:none}
+.paywall-banner{background:linear-gradient(135deg,rgba(245,197,24,.12),rgba(245,197,24,.06));border:1px solid rgba(245,197,24,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.paywall-banner-text{font-size:12px;color:var(--muted2);line-height:1.5}
+.paywall-banner-text strong{color:var(--text);display:block;margin-bottom:2px}
+
+
 details{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;margin-bottom:8px}
 details summary{cursor:pointer;font-weight:500;font-size:13px;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details summary::after{content:'›';font-size:18px;color:var(--muted2);transition:transform .2s}
@@ -604,6 +615,13 @@ details p{font-size:12px;color:var(--muted2);line-height:1.65;margin-top:10px}
         <h1 class="bb" style="font-size:26px;color:var(--text2)">CLIENTS</h1>
         <button class="btn-lime" style="padding:8px 14px;font-size:10px" onclick="openModal('client')">+ Add Client</button>
       </div>
+      <div id="pro-banner-clients" class="paywall-banner" style="display:none">
+        <div class="paywall-banner-text">
+          <strong>Free plan — view only</strong>
+          Add clients &amp; manage your CRM with Pro
+        </div>
+        <button onclick="openPaywall('Manage Clients')" class="btn-lime" style="padding:8px 14px;font-size:11px;white-space:nowrap;flex-shrink:0">Upgrade →</button>
+      </div>
       <div id="client-pipeline" style="margin-bottom:16px"></div>
       <div id="client-list"></div>
     </div>
@@ -613,6 +631,13 @@ details p{font-size:12px;color:var(--muted2);line-height:1.65;margin-top:10px}
       <div class="sec-head">
         <h1 class="bb" style="font-size:26px;color:var(--text2)">TASKS</h1>
         <button class="btn-lime" style="padding:8px 14px;font-size:10px" onclick="openModal('task')">+ Add Task</button>
+      </div>
+      <div id="pro-banner-tasks" class="paywall-banner" style="display:none">
+        <div class="paywall-banner-text">
+          <strong>Free plan — view only</strong>
+          Add, edit and complete tasks with a Pro subscription
+        </div>
+        <button onclick="openPaywall('Manage Tasks')" class="btn-lime" style="padding:8px 14px;font-size:11px;white-space:nowrap;flex-shrink:0">Upgrade →</button>
       </div>
       <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px" id="task-filters">
         <button class="btn-ghost filter-btn active-filter" data-filter="all" onclick="setFilter('all',this)">All</button>
@@ -629,6 +654,13 @@ details p{font-size:12px;color:var(--muted2);line-height:1.65;margin-top:10px}
       <div class="sec-head">
         <h1 class="bb" style="font-size:26px;color:var(--text2)">FINANCE</h1>
         <button class="btn-lime" style="padding:8px 14px;font-size:10px" onclick="openModal('expense')">+ Expense</button>
+      </div>
+      <div id="pro-banner-finance" class="paywall-banner" style="display:none">
+        <div class="paywall-banner-text">
+          <strong>Free plan — view only</strong>
+          Log expenses &amp; track finances with Pro
+        </div>
+        <button onclick="openPaywall('Track Expenses')" class="btn-lime" style="padding:8px 14px;font-size:11px;white-space:nowrap;flex-shrink:0">Upgrade →</button>
       </div>
       <div class="grid-2" style="margin-bottom:14px" id="finance-kpis"></div>
       <div class="card" style="margin-bottom:14px">
@@ -766,6 +798,9 @@ details p{font-size:12px;color:var(--muted2);line-height:1.65;margin-top:10px}
         </div>
       </div>
 
+      <!-- Membership status -->
+      <div id="profile-membership-card" style="margin-bottom:14px"></div>
+
       <!-- Edit form -->
       <div class="card card-pad" style="margin-bottom:14px">
         <div style="font-weight:600;font-size:14px;margin-bottom:16px;color:var(--text2)">Business Profile</div>
@@ -849,7 +884,80 @@ details p{font-size:12px;color:var(--muted2);line-height:1.65;margin-top:10px}
   </div>
 </div>
 
-<!-- ══ TASK MODAL ══ -->
+<!-- ══ MEMBERSHIP PAYWALL MODAL ══ -->
+<div class="modal-overlay" id="paywall-modal">
+  <div class="yoco-popup" style="max-height:92vh;overflow-y:auto">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-size:11px;color:var(--a);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">HustlePortal™ Pro</div>
+        <div class="modal-title" style="font-size:24px">Unlock Full Access</div>
+        <div style="font-size:13px;color:var(--muted2);margin-top:4px">Edit tasks, manage clients & grow faster</div>
+      </div>
+      <button onclick="closePaywall()" style="font-size:22px;color:var(--muted2);line-height:1;flex-shrink:0;padding:0 0 0 12px">×</button>
+    </div>
+
+    <!-- What's locked -->
+    <div style="background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.2);border-radius:12px;padding:14px;margin-bottom:16px">
+      <div style="font-size:11px;color:var(--a);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">What you unlock</div>
+      <div id="paywall-feature" style="font-size:13px;color:var(--a);font-weight:600;margin-bottom:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text)"><span style="color:var(--a);font-size:14px">✔</span> Add &amp; manage tasks with priorities &amp; due dates</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text)"><span style="color:var(--a);font-size:14px">✔</span> Add &amp; delete clients — full CRM access</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text)"><span style="color:var(--a);font-size:14px">✔</span> Log &amp; track business expenses</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text)"><span style="color:var(--a);font-size:14px">✔</span> AI Co-Founder with your live business data</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text)"><span style="color:var(--a);font-size:14px">✔</span> Priority WhatsApp support from BH team</div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:4px">
+        <div class="bb" style="font-size:42px;color:var(--a);line-height:1">R99</div>
+        <div style="font-size:13px;color:var(--muted2);padding-bottom:6px">/ month</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted2)">Cancel anytime · Secure payment via Yoco</div>
+    </div>
+
+    <!-- Yoco CTA -->
+    <div style="background:rgba(37,211,102,.07);border:1px solid rgba(37,211,102,.2);border-radius:10px;padding:11px 14px;font-size:11px;color:#9a9a98;margin-bottom:16px;line-height:1.65">
+      🔒 <strong style="color:var(--green)">Secured by Yoco</strong> — South Africa's trusted payment gateway. Card, Apple Pay &amp; Google Pay accepted.
+    </div>
+
+    <!-- Yoco R99/month subscription link -->
+    <a href="https://pay.yoco.com/r/7rPwXr" target="_blank" rel="noopener"
+      class="btn-lime"
+      style="display:block;text-align:center;padding:15px;font-size:14px;border-radius:14px;margin-bottom:10px;letter-spacing:.05em"
+      onclick="handlePaywallClick()">
+      💳 Subscribe — R99/month
+    </a>
+
+    <!-- Already paid? -->
+    <div style="text-align:center;margin-bottom:10px">
+      <button onclick="showProCodeEntry()" style="background:none;border:none;font-size:12px;color:var(--muted2);cursor:pointer;text-decoration:underline">
+        Already subscribed? Enter your code
+      </button>
+    </div>
+
+    <!-- Code entry (hidden by default) -->
+    <div id="pro-code-wrap" style="display:none;margin-bottom:10px">
+      <div style="display:flex;gap:8px">
+        <input id="pro-code-inp" placeholder="Enter access code (e.g. BHP-XXXX)" style="flex:1;width:auto;border-radius:10px"/>
+        <button onclick="redeemProCode()" class="btn-lime" style="padding:10px 14px;font-size:12px;border-radius:10px;white-space:nowrap">Redeem</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:6px;text-align:center">
+        Your code is sent to WhatsApp after payment
+      </div>
+    </div>
+
+    <button onclick="closePaywall()" style="width:100%;background:rgba(255,255,255,.04);border:none;border-radius:10px;padding:12px;color:var(--muted2);font-family:inherit;font-size:12px;cursor:pointer">
+      Maybe later — stay on free plan
+    </button>
+  </div>
+</div>
+
+
 <div class="modal-overlay center" id="task-modal">
   <div class="modal-sheet">
     <div class="modal-title">ADD TASK</div>
@@ -1071,6 +1179,7 @@ function initApp() {
   renderQuiz();
   renderAIPrompts();
   updateAIContext();
+  renderProStatus(); // membership state
   if(bizProfile) {
     document.getElementById('biz-name-header').textContent = bizProfile.name || 'Business Hustle';
   }
@@ -1233,7 +1342,7 @@ function renderAgentLog() {
   el.innerHTML=agentLog.slice(0,6).map(l=>`
     <div class="agent-item">
       <div class="agent-dot" style="background:${l.type==='alert'?'#f5c542':l.type==='chat'?'#44aadd':'var(--a)'}"></div>
-      <div style="flex:1;font-size:11px;color:#7a7a78">${l.action}</div>
+      <div style="flex:1;font-size:11px;color:var(--muted2)">${esc(l.action)}</div>
       <div style="font-size:10px;color:var(--muted);flex-shrink:0">${fmtTime(l.ts)}</div>
     </div>`).join('');
 }
@@ -1255,8 +1364,8 @@ function renderDashTasks() {
         ${t.status==='completed'?'<span style="font-size:8px;color:var(--a)">✓</span>':''}
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;${t.status==='completed'?'text-decoration:line-through;color:var(--muted2)':''}">${t.title}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${clientName(t.client)?`<span style="color:#7a7a78">${clientName(t.client)} · </span>`:''}${t.due||'No due date'}${t.aiAssigned?'<span style="color:rgba(245,197,24,.5)"> · AI</span>':''}</div>
+        <div style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;${t.status==='completed'?'text-decoration:line-through;color:var(--muted2)':''}">${esc(t.title)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${clientName(t.client)?`<span style="color:var(--muted2)">${esc(clientName(t.client))} · </span>`:''}${esc(t.due||'No due date')}${t.aiAssigned?'<span style="color:rgba(245,197,24,.5)"> · AI</span>':''}</div>
       </div>
       <div style="width:7px;height:7px;border-radius:50%;background:${P_COLOR[t.priority]||'#555'};flex-shrink:0;margin-top:4px"></div>
     </div>`).join('');
@@ -1271,8 +1380,8 @@ function renderDashClients() {
     <div class="row">
       <div class="status-dot" style="background:${S_COLOR[c.status]};margin-top:4px"></div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.name}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${c.project||''}</div>
+        <div style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.name)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${esc(c.project||'')}</div>
       </div>
       <div style="font-size:11px;color:var(--a);flex-shrink:0">${fmtK(c.value)}</div>
     </div>`).join('');
@@ -1300,17 +1409,17 @@ function renderClientList() {
       <div style="display:flex;align-items:flex-start;gap:12px">
         <div class="status-dot" style="background:${S_COLOR[c.status]||'#555'};margin-top:4px"></div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:500;color:var(--text2)">${c.name}</div>
-          <div style="font-size:11px;color:var(--muted2);margin-top:2px">${c.project||''} · Since ${c.since}</div>
-          ${c.email?`<div style="font-size:10px;color:var(--muted);margin-top:2px">${c.email}</div>`:''}
+          <div style="font-size:14px;font-weight:500;color:var(--text2)">${esc(c.name)}</div>
+          <div style="font-size:11px;color:var(--muted2);margin-top:2px">${esc(c.project||'')} · Since ${esc(c.since)}</div>
+          ${c.email?`<div style="font-size:10px;color:var(--muted);margin-top:2px">${esc(c.email)}</div>`:''}
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-family:'Bebas Neue',serif;font-size:18px;color:var(--a)">${fmtK(c.value)}</div>
-          <div class="badge" style="background:${S_COLOR[c.status]}22;color:${S_COLOR[c.status]};margin-top:4px">${S_LABEL[c.status]||c.status}</div>
+          <div class="badge" style="background:${S_COLOR[c.status]||'#555'}22;color:${S_COLOR[c.status]||'#555'};margin-top:4px">${S_LABEL[c.status]||c.status}</div>
         </div>
       </div>
       ${c.contact?`<div style="display:flex;gap:8px;margin-top:10px">
-        <a href="${waLink(`Hi! I'm following up re: ${c.project||'your project'}. — Business Hustle`)}" target="_blank" class="btn-wa" style="flex:1;justify-content:center;padding:7px 10px;font-size:10px">💬 WhatsApp</a>
+        <a href="${waLink(`Hi! Following up re: ${c.project||'your project'}. — Business Hustle`)}" target="_blank" class="btn-wa" style="flex:1;justify-content:center;padding:7px 10px;font-size:10px">💬 WhatsApp</a>
         <button onclick="deleteClient('${c.id}')" class="btn-ghost" style="padding:7px 12px;font-size:10px">✕</button>
       </div>`:''}
     </div>`).join('');
@@ -1333,7 +1442,10 @@ function addClient() {
   addAgentLog(`Client added: ${c.name}`,'create');
   renderClientList();renderDashClients();renderKPIs();
 }
-function deleteClient(id){clients=clients.filter(c=>c.id!==id);save('hp_clients',clients);renderClientList();renderDashClients();renderKPIs();}
+function deleteClient(id){
+  if(!isPro){openPaywall('Delete a Client');return;}
+  clients=clients.filter(c=>c.id!==id);save('hp_clients',clients);renderClientList();renderDashClients();renderKPIs();
+}
 
 /* ═══════════════════════════════════
    TASKS
@@ -1348,9 +1460,8 @@ function setFilter(f, btn) {
 function renderTaskList() {
   const el=document.getElementById('task-list');
   if(!el)return;
-  // Populate client dropdown in modal
   const sel=document.getElementById('tm-client');
-  if(sel){sel.innerHTML='<option value="">No client</option>'+clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');}
+  if(sel){sel.innerHTML='<option value="">No client</option>'+clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');}
   let filtered=tasks;
   if(taskFilter==='high')filtered=tasks.filter(t=>t.priority==='high');
   else if(taskFilter==='ai')filtered=tasks.filter(t=>t.aiAssigned);
@@ -1362,17 +1473,17 @@ function renderTaskList() {
         ${t.status==='completed'?'<span style="font-size:8px;color:var(--a)">✓</span>':''}
       </div>
       <div style="flex:1;min-width:0;cursor:default">
-        <div style="font-size:13px;color:var(--text2);${t.status==='completed'?'text-decoration:line-through;color:var(--muted2)':''}">${t.title}</div>
+        <div style="font-size:13px;color:var(--text2);${t.status==='completed'?'text-decoration:line-through;color:var(--muted2)':''}">${esc(t.title)}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">
-          ${clientName(t.client)?`<span style="color:#7a7a78">${clientName(t.client)} · </span>`:''}
-          ${t.due||'No due date'}
+          ${clientName(t.client)?`<span style="color:var(--muted2)">${esc(clientName(t.client))} · </span>`:''}
+          ${esc(t.due||'No due date')}
           ${t.aiAssigned?'<span style="color:rgba(245,197,24,.5)"> · AI-assigned</span>':''}
         </div>
-        ${t.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic">${t.notes}</div>`:''}
+        ${t.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic">${esc(t.notes)}</div>`:''}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-        <div class="badge" style="background:${P_COLOR[t.priority]}18;color:${P_COLOR[t.priority]}">${t.priority}</div>
-        <div class="badge" style="background:${S_COLOR[t.status]||'#555'}18;color:${S_COLOR[t.status]||'#555'}">${S_LABEL[t.status]||t.status}</div>
+        <div class="badge" style="background:${P_COLOR[t.priority]||'#555'}18;color:${P_COLOR[t.priority]||'#555'}">${esc(t.priority)}</div>
+        <div class="badge" style="background:${S_COLOR[t.status]||'#555'}18;color:${S_COLOR[t.status]||'#555'}">${S_LABEL[t.status]||esc(t.status)}</div>
         <button onclick="deleteTask('${t.id}')" style="font-size:10px;color:var(--muted2);cursor:pointer;margin-top:2px">✕</button>
       </div>
     </div>`).join('');
@@ -1396,10 +1507,14 @@ function addTask() {
   renderTaskList();renderDashTasks();renderKPIs();
 }
 function toggleTask(id){
+  if(!isPro){openPaywall('Mark task complete');return;}
   tasks=tasks.map(t=>t.id===id?{...t,status:t.status==='completed'?'todo':'completed'}:t);
   save('hp_tasks',tasks);renderTaskList();renderDashTasks();renderKPIs();
 }
-function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save('hp_tasks',tasks);renderTaskList();renderDashTasks();renderKPIs();}
+function deleteTask(id){
+  if(!isPro){openPaywall('Delete a Task');return;}
+  tasks=tasks.filter(t=>t.id!==id);save('hp_tasks',tasks);renderTaskList();renderDashTasks();renderKPIs();
+}
 
 /* ═══════════════════════════════════
    FINANCE
@@ -1419,9 +1534,9 @@ function renderExpenseList() {
   el.innerHTML=expenses.map(e=>`
     <div class="exp-item">
       <div style="flex:1">
-        <div style="font-size:12px;color:var(--text2)">${e.label}</div>
+        <div style="font-size:12px;color:var(--text2)">${esc(e.label)}</div>
         <div style="display:flex;gap:6px;margin-top:4px;align-items:center">
-          <span class="exp-cat" style="background:${CAT_COLOR[e.category]||'#555'}18;color:${CAT_COLOR[e.category]||'#555'}">${e.category}</span>
+          <span class="exp-cat" style="background:${CAT_COLOR[e.category]||'#555'}18;color:${CAT_COLOR[e.category]||'#555'}">${esc(e.category)}</span>
           ${e.recurring?'<span style="font-size:9px;color:var(--muted2)">recurring</span>':''}
         </div>
       </div>
@@ -1439,7 +1554,10 @@ function addExpense() {
   document.getElementById('em-label').value='';document.getElementById('em-amount').value='';
   renderExpenseList();renderFinanceKPIs();renderKPIs();renderRevChart('finance-rev');
 }
-function deleteExpense(id){expenses=expenses.filter(e=>e.id!==id);save('hp_expenses',expenses);renderExpenseList();renderFinanceKPIs();renderKPIs();}
+function deleteExpense(id){
+  if(!isPro){openPaywall('Delete an Expense');return;}
+  expenses=expenses.filter(e=>e.id!==id);save('hp_expenses',expenses);renderExpenseList();renderFinanceKPIs();renderKPIs();
+}
 
 /* ═══════════════════════════════════
    YOCO PAYMENT POPUP
@@ -1581,22 +1699,20 @@ function renderShop() {
   const el=document.getElementById('shop-list');
   if(!el)return;
   el.innerHTML=SHOP_ITEMS.map((item,i)=>`
-    <div class="shop-card" style="border:1px solid ${item.color}22" onclick="openYocoPopup(${i})">
-      <div class="shop-tag" style="background:${item.color};color:#0a0a0b">${item.tag}</div>
+    <div class="shop-card" style="border:1px solid ${item.color}22;cursor:pointer" onclick="openYocoPopup(${i})">
+      <div class="shop-tag" style="background:${item.color};color:#0a0a0b">${esc(item.tag)}</div>
       ${item.img
         ?`<div style="width:100%;height:140px;overflow:hidden;border-radius:10px;margin-bottom:12px;background:var(--bg3)">
-            <img src="${item.img}" alt="${item.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:10px;transition:transform .3s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+            <img src="${esc(item.img)}" alt="${esc(item.title)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:10px"/>
           </div>`
         :`<div class="shop-icon">${item.icon||'📦'}</div>`
       }
-      <div style="font-size:10px;color:${item.color};letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">${item.cat}</div>
-      <div class="shop-name">${item.title}</div>
-      <div class="shop-desc">${item.desc}</div>
+      <div style="font-size:10px;color:${item.color};letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">${esc(item.cat||'')}</div>
+      <div class="shop-name">${esc(item.title)}</div>
+      <div class="shop-desc">${esc(item.desc)}</div>
       <div class="shop-footer">
-        <div class="shop-price" style="color:${item.color}">${item.price}</div>
-        <button class="yoco-btn wa" onclick="event.stopPropagation();openYocoPopup(${i})">
-          View →
-        </button>
+        <div class="shop-price" style="color:${item.color}">${esc(item.price)}</div>
+        <button class="yoco-btn wa" onclick="event.stopPropagation();openYocoPopup(${i})">View →</button>
       </div>
     </div>`).join('');
 }
@@ -1890,18 +2006,20 @@ const SVCS=[
 ];
 function renderServices(){
   const el=document.getElementById('svc-list');if(!el)return;
-  el.innerHTML=SVCS.map((s,i)=>`
-    <div class="svc-item${svcOpen===i?' open':''}" style="border-color:${svcOpen===i?s.color+'50':s.color+'18'}" onclick="toggleSvc(${i})">
+  el.innerHTML=SVCS.map((s,i)=>{
+    const isOpen = svcOpen===i;
+    return `<div class="svc-item${isOpen?' open':''}" style="border-color:${isOpen?s.color+'50':s.color+'18'}" onclick="toggleSvc(${i})">
       <div class="svc-header">
         <span style="font-size:24px">${s.icon}</span>
-        <div style="flex:1"><div style="font-weight:500;font-size:14px">${s.title}</div><div style="font-size:11px;color:var(--muted2)">${s.desc}</div></div>
+        <div style="flex:1"><div style="font-weight:500;font-size:14px">${esc(s.title)}</div><div style="font-size:11px;color:var(--muted2)">${esc(s.desc)}</div></div>
         <span class="svc-arrow">›</span>
       </div>
       <div class="svc-detail">
-        <p style="font-size:13px;color:#9a9a98;line-height:1.65;margin-bottom:12px">${s.detail}</p>
+        <p style="font-size:13px;color:#9a9a98;line-height:1.65;margin-bottom:12px">${esc(s.detail)}</p>
         <a href="${waLink(s.waMsg)}" target="_blank" onclick="addXP(10,'💬 +10 XP!')" class="btn-wa" style="display:inline-flex;padding:8px 16px;font-size:12px;border-radius:8px">💬 Enquire on WhatsApp →</a>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 function toggleSvc(i){svcOpen=svcOpen===i?null:i;renderServices();}
 
@@ -1936,25 +2054,37 @@ const RESOURCES=[
   {icon:'💳',color:'#34d399',title:'Payment Tools',items:[['Yoco','https://yoco.com','SA payment gateway (used by BH)'],['PayFast','https://payfast.co.za','SA online payment gateway'],['RevenueCat','https://revenuecat.com','In-app subscriptions']]},
   {icon:'🎓',color:'#a78bfa',title:'Education & Training',items:[['edX','https://edx.org','Harvard, MIT & more — free'],['FreeCodeCamp','https://freecodecamp.com','Full coding curriculum'],['Coursera','https://coursera.org','World-class online courses']]},
 ];
+/* ═══════════════════════════════════
+   RESOURCES
+═══════════════════════════════════ */
+// Escape HTML entities in strings before injecting into innerHTML
+function esc(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function renderResources(){
-  const el=document.getElementById('res-list');if(!el)return;
-  el.innerHTML=RESOURCES.map((cat,ci)=>`
-    <div class="res-section">
-      <button class="res-btn" onclick="toggleRes(${ci})" style="${resOpen===ci?`border-color:${cat.color}50;color:${cat.color}`:''}">
+  const el=document.getElementById('res-list');
+  if(!el)return;
+  el.innerHTML=RESOURCES.map((cat,ci)=>{
+    const isOpen = resOpen===ci;
+    return `<div class="res-section">
+      <button class="res-btn" onclick="toggleRes(${ci})" style="${isOpen?`border-color:${cat.color}50;color:${cat.color}`:''}">
         <span style="font-size:20px">${cat.icon}</span>
-        <span style="flex:1;font-size:14px">${cat.title}</span>
+        <span style="flex:1;font-size:14px">${esc(cat.title)}</span>
         <span style="font-size:11px;color:var(--muted2);background:rgba(255,255,255,.06);border-radius:4px;padding:2px 8px">${cat.items.length}</span>
-        <span style="color:var(--muted2);font-size:18px;transition:transform .2s${resOpen===ci?';transform:rotate(90deg)':''}">›</span>
+        <span style="color:var(--muted2);font-size:18px;transition:transform .3s;display:inline-block${isOpen?';transform:rotate(90deg)':''}">›</span>
       </button>
-      ${resOpen===ci?`<div class="res-detail">${cat.items.map(([name,url,desc])=>`
-        <a href="${url}" target="_blank" rel="noopener noreferrer" onclick="addXP(3,'📚 +3 XP!')">
+      ${isOpen?`<div class="res-detail">${cat.items.map(([name,url,desc])=>`
+        <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" onclick="addXP(3,'📚 +3 XP!')">
           <span class="res-dot" style="background:${cat.color}"></span>
-          <div style="flex:1"><div style="font-weight:500;font-size:12px">${name}</div><div style="font-size:10px;color:var(--muted2)">${desc}</div></div>
+          <div style="flex:1"><div style="font-weight:500;font-size:12px">${esc(name)}</div><div style="font-size:10px;color:var(--muted2)">${esc(desc)}</div></div>
           <span style="color:var(--muted2);font-size:12px">↗</span>
         </a>`).join('')}</div>`:''}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
-function toggleRes(i){resOpen=resOpen===i?null:i;renderResources();}
+function toggleRes(i){
+  resOpen = resOpen===i ? null : i;
+  renderResources();
+}
 
 /* ═══════════════════════════════════
    HUSTLE QUIZ
@@ -2029,7 +2159,14 @@ function submitLead(){
 /* ═══════════════════════════════════
    MODAL HELPERS
 ═══════════════════════════════════ */
-function openModal(type){document.getElementById(type+'-modal').classList.add('open');}
+function openModal(type){
+  if((type==='task'||type==='client'||type==='expense') && !isPro) {
+    const names={task:'Add a Task',client:'Add a Client',expense:'Log an Expense'};
+    openPaywall(names[type]||'Edit your business data');
+    return;
+  }
+  document.getElementById(type+'-modal').classList.add('open');
+}
 function closeModal(type){document.getElementById(type+'-modal').classList.remove('open');}
 ['task','client','expense'].forEach(t=>{
   document.getElementById(t+'-modal').addEventListener('click',function(e){if(e.target===this)closeModal(t);});
@@ -2037,8 +2174,128 @@ function closeModal(type){document.getElementById(type+'-modal').classList.remov
 document.getElementById('lead-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
 /* ═══════════════════════════════════
-   GOOGLE SHEETS INTEGRATION
+   MEMBERSHIP SYSTEM
 ═══════════════════════════════════ */
+// Valid pro codes — in production these would be generated server-side
+// Format: BHP-XXXX where XXXX is alphanumeric
+// Add new codes here as you issue them via WhatsApp post-payment
+const PRO_CODES = ['BHP-2025','BHP-BETA','BHP-STAFF','BHP-LAUNCH'];
+
+let isPro = load('hp_pro', false);
+let _paywallPendingAction = null; // stores the function to run after unlock
+
+function checkPro() { return isPro; }
+
+function unlockPro(source) {
+  isPro = true;
+  save('hp_pro', true);
+  addXP(100, '🔓 +100 XP — Pro unlocked!');
+  addAgentLog('Pro membership activated — full access unlocked', 'create');
+  sendToSheet('leads', {
+    name: bizProfile?.owner || 'Unknown',
+    email: bizProfile?.name || 'Unknown',
+    source: `Pro Unlock — ${source}`,
+  });
+  showToast('🔓 Pro unlocked! Full access activated.');
+  renderProStatus();
+  // Run the pending action if there was one
+  if(_paywallPendingAction) {
+    const fn = _paywallPendingAction;
+    _paywallPendingAction = null;
+    setTimeout(fn, 300);
+  }
+}
+
+function requirePro(featureName, action) {
+  if(isPro) { action(); return; }
+  _paywallPendingAction = action;
+  openPaywall(featureName);
+}
+
+function openPaywall(featureName) {
+  const feat = document.getElementById('paywall-feature');
+  if(feat) feat.textContent = featureName ? `You're trying to: ${featureName}` : 'Upgrade to edit your business data';
+  document.getElementById('paywall-modal').classList.add('open');
+  document.getElementById('pro-code-wrap').style.display = 'none';
+}
+
+function closePaywall() {
+  document.getElementById('paywall-modal').classList.remove('open');
+  _paywallPendingAction = null;
+}
+
+function handlePaywallClick() {
+  // After opening Yoco link, show code entry automatically
+  setTimeout(() => {
+    showProCodeEntry();
+    showToast('Complete payment then enter your code below');
+  }, 1500);
+}
+
+function showProCodeEntry() {
+  document.getElementById('pro-code-wrap').style.display = 'block';
+  setTimeout(() => document.getElementById('pro-code-inp')?.focus(), 100);
+}
+
+function redeemProCode() {
+  const code = (document.getElementById('pro-code-inp')?.value || '').trim().toUpperCase();
+  if(!code) return showToast('Enter your access code', 'err');
+  if(PRO_CODES.includes(code)) {
+    document.getElementById('paywall-modal').classList.remove('open');
+    unlockPro(`Code: ${code}`);
+  } else {
+    showToast('❌ Invalid code — check WhatsApp or contact us', 'err');
+    document.getElementById('pro-code-inp').style.borderColor = 'var(--red)';
+    setTimeout(() => {
+      if(document.getElementById('pro-code-inp'))
+        document.getElementById('pro-code-inp').style.borderColor = '';
+    }, 2000);
+  }
+}
+
+// Close paywall on overlay click
+document.getElementById('paywall-modal').addEventListener('click', function(e) {
+  if(e.target === this) closePaywall();
+});
+// Enter key on code input
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && document.getElementById('pro-code-wrap')?.style.display !== 'none') {
+    redeemProCode();
+  }
+});
+
+function renderProStatus() {
+  // Update header XP pill to show Pro badge
+  const pill = document.querySelector('.xp-pill');
+  if(pill) {
+    const existing = pill.querySelector('.pro-badge,.free-badge');
+    if(existing) existing.remove();
+    const badge = document.createElement('span');
+    badge.className = isPro ? 'pro-badge' : 'free-badge';
+    badge.textContent = isPro ? '★ PRO' : 'FREE';
+    pill.insertBefore(badge, pill.firstChild);
+  }
+  // Re-render tasks and clients to update lock state
+  renderTaskList();
+  renderClientList();
+  renderExpenseList();
+  updateProBanners();
+}
+
+function updateProBanners() {
+  // Show/hide upgrade banners on tasks and clients pages
+  ['tasks','clients','finance'].forEach(page => {
+    const el = document.getElementById(`pro-banner-${page}`);
+    if(el) el.style.display = isPro ? 'none' : 'flex';
+  });
+  // Update + Add buttons to show lock state
+  const addTaskBtn = document.querySelector('#page-tasks .btn-lime');
+  const addClientBtn = document.querySelector('#page-clients .btn-lime');
+  if(addTaskBtn) addTaskBtn.classList.toggle('locked-btn', !isPro);
+  if(addClientBtn) addClientBtn.classList.toggle('locked-btn', !isPro);
+}
+
+
 // Paste your Apps Script Web App URL here after deployment:
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwN5YhdUJHkSMFNiLRfSxXdJG4hYU6mfFi0h0ak_F0gz5KiOI95tZP29qWNORG15aricw/exec';
 
@@ -2058,6 +2315,34 @@ function sendToSheet(event, data) {
 ═══════════════════════════════════ */
 function loadProfilePage() {
   if(!bizProfile) return;
+
+  // Membership card
+  const memCard = document.getElementById('profile-membership-card');
+  if(memCard) {
+    if(isPro) {
+      memCard.innerHTML=`
+        <div style="background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.3);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-size:11px;color:var(--a);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">★ Pro Member</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text2)">Full access active</div>
+            <div style="font-size:11px;color:var(--muted2);margin-top:2px">All features unlocked · R99/month</div>
+          </div>
+          <div style="font-size:32px">🔓</div>
+        </div>`;
+    } else {
+      memCard.innerHTML=`
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-size:11px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Free Plan</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text2)">View-only access</div>
+            <div style="font-size:11px;color:var(--muted2);margin-top:2px">Upgrade to edit tasks &amp; clients</div>
+          </div>
+          <button onclick="openPaywall('Upgrade to Pro')" class="btn-lime" style="padding:10px 14px;font-size:11px;white-space:nowrap;flex-shrink:0;border-radius:10px">
+            Upgrade →
+          </button>
+        </div>`;
+    }
+  }
   // Fill form
   const set = (id,val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
   set('prof-biz', bizProfile.name);
