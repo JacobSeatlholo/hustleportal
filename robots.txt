@@ -1,13 +1,10 @@
 User-agent: *
 Allow: /
 
-# Sitemap
 Sitemap: https://hustleportal.online/sitemap.xml
 
-# Googlebot specific
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
 
-# Block internal/API paths
 Disallow: /api/

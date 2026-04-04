@@ -2,13 +2,6 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
-  "redirects": [
-    {
-      "source": "https://www.hustleportal.online/(.*)",
-      "destination": "https://hustleportal.online/$1",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
