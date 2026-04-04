@@ -2327,7 +2327,8 @@ async function redeemProCode() {
   inp.disabled = true;
 
   try {
-    const r = await fetch(SHEET_URL, {
+    // Route through our own /api/plan proxy — avoids CORS issues with Apps Script
+    const r = await fetch('/api/plan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2339,9 +2340,7 @@ async function redeemProCode() {
       }),
     });
 
-    // Apps Script uses no-cors in some setups — handle opaque response gracefully
-    let result = { valid: false, reason: 'network' };
-    try { result = await r.json(); } catch(e) {}
+    const result = await r.json();
 
     if(result.valid) {
       document.getElementById('paywall-modal').classList.remove('open');
