@@ -4,12 +4,10 @@ Allow: /
 # Sitemap
 Sitemap: https://hustleportal.online/sitemap.xml
 
-# Google
+# Googlebot specific
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 0
-
-# Bing
-User-agent: Bingbot
-Allow: /
 Crawl-delay: 1
+
+# Block internal/API paths
+Disallow: /api/
