@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
     // Also try the Sheet for one-time codes
     const SHEET_URL = process.env.SHEET_URL ||
-      'https://script.google.com/macros/s/AKfycbzgSeTR5mHyUubtu9iGnV0CD0EnWv7kQdDCw-Oqki-jnNXq4nh3IVP5O9hno-0YGYMKCA/exec';
+      'https://script.google.com/macros/s/AKfycbzPoV5NjnP0v6k68Ap-Shpxx64D5kYdzH8DZexhcS5OT3NlbUalgzoTIR1h_dTol-yYCw/exec';
     try {
       const r = await fetch(SHEET_URL, {
         method: 'POST',
