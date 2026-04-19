@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     if (envCodes.includes(code)) {
       const SHEET_URL = process.env.SHEET_URL ||
-        'https://script.google.com/macros/s/AKfycbzPoV5NjnP0v6k68Ap-Shpxx64D5kYdzH8DZexhcS5OT3NlbUalgzoTIR1h_dTol-yYCw/exec';
+        'https://script.google.com/macros/s/AKfycbwfCkoyOLdn4w6nx3bWuNJ4yZkVW8gWgqZjRurQyk7rPx7Jb5phD5NvIyHmlIotDxEWlw/exec';
       fetch(SHEET_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     }
 
     const SHEET_URL = process.env.SHEET_URL ||
-      'https://script.google.com/macros/s/AKfycbzPoV5NjnP0v6k68Ap-Shpxx64D5kYdzH8DZexhcS5OT3NlbUalgzoTIR1h_dTol-yYCw/exec';
+      'https://script.google.com/macros/s/AKfycbwfCkoyOLdn4w6nx3bWuNJ4yZkVW8gWgqZjRurQyk7rPx7Jb5phD5NvIyHmlIotDxEWlw/exec';
     try {
       const r = await fetch(SHEET_URL, {
         method: 'POST',
